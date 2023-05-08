@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
+const fs = require('fs');
 const session = require("express-session");
 const passport = require('passport');
 const passportLocalMongoose = require('passport-local-mongoose');
@@ -34,9 +35,10 @@ const userSchema = new mongoose.Schema({
 
 const postSchema = new mongoose.Schema({
     title: String,
-    decription: String,
-    coverImage: Buffer,
+    description: String,
+    coverImage: String,
     author: mongoose.Schema.Types.ObjectId,
+    tags: [String]
 }, { timestamps: true })
 
 
@@ -45,7 +47,7 @@ const postSchema = new mongoose.Schema({
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
 const User = mongoose.model("user", userSchema);
-const Posts = mongoose.model("blogPost", postSchema);
+const Post = mongoose.model("blogPost", postSchema);
 passport.use(User.createStrategy());
 passport.serializeUser(function (user, cb) {
     process.nextTick(function () {
@@ -76,12 +78,29 @@ app.get("/", (req, res) => {
         // console.log(req.user)
         User.findById(req.user.id)
             .then((user) => {
-                // console.log(user);
-                res.render("index", { user });
+                Post.find({})
+                    .then((post) => {
+                        res.render("index", { user, post })
+                    }
+                        // console.log(user);
+                    );
             })
     } else {
         res.redirect("/login");
     }
+})
+
+app.get("/api/getallPosts", (req, res) => {
+    // console.log(req.user)
+    Post.find({})
+        .then((data) => {
+            // console.log(user);
+            // data.forEach((post) => {
+            //     post.coverImage.data = post.coverImage.data.toString('base64');
+            // })
+            res.json(data);
+        })
+
 })
 
 app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] })
@@ -98,7 +117,7 @@ app.get("/login", (req, res) => {
         User.findById(req.user.id)
             .then((user) => {
                 // console.log(user);
-                res.render("index", { user });
+                res.redirect("/");
             })
     } else {
         res.render("login");
@@ -111,7 +130,7 @@ app.get("/signup", (req, res) => {
         User.findById(req.user.id)
             .then((user) => {
                 // console.log(user);
-                res.render("index", { user });
+                res.redirect("/");
             })
     } else {
         res.render("signup");
@@ -146,6 +165,7 @@ app.post("/signup", (req, res) => {
 
 })
 app.post("/login", (req, res) => {
+    res.write
     const user = new User({
         username: req.body.username,
         password: req.body.password
