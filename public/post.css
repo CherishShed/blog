@@ -1,0 +1,146 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --whiteGreen: #F6FFDE;
+    --grad: linear-gradient(to bottom right, #F97B22, #9E6F21, #FEE8B0, #9CA777, #9CA777, #0A4D68);
+    --text: #9E6F21;
+    --footer: #83764F;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    /* background-color: var(--whiteGreen); */
+    font-family: 'Kanit', sans-serif;
+
+}
+
+h1,
+h2,
+h3,
+h4,
+h5 {
+    color: white;
+}
+
+.navbar-brand {
+    color: white;
+    font-weight: 500;
+    font-size: 30px;
+}
+
+.navbar {
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 30px;
+    /* margin-top: 20px; */
+    position: absolute;
+    top: 0;
+    z-index: 10;
+    background-color: transparent;
+
+}
+
+.nav-link:not(.btn) {
+    color: #ffffff;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+.nav-link:not(.btn):hover {
+    color: var(--text);
+}
+
+.create-post{
+    background-color: #F6FFDE;
+    color: black;
+}
+.get-started{
+    background-color: rgba(10, 77, 104, 0.3);
+    color: white;
+}
+.navbar-nav {
+    margin: 0 auto;
+    gap: 50px;
+}
+
+.post-hero {
+    /* position: relative; */
+    background-color: #83764F;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    padding: 100px 0;
+    width: 100%;
+    /* height: 100vh; */
+    align-items: center;
+    justify-content: space-around;
+
+}
+
+.post-hero-image {
+    height: 100%;
+    /* min-width: 40%; */
+    width: 55%;
+    position: relative;
+}
+
+.post-hero-image img {
+    height: 100%;
+    width: 100%;
+    /* aspect-ratio: 21/9; */
+}
+
+.post-intro {
+    width: 35%;
+    height: 80%;
+    padding: 30px;
+    margin: 0 auto;
+    color: white;
+}
+.blog-content{
+    background-color: white;
+    width: 50%;
+    margin: 0 auto;
+    line-height: 30px;
+    text-align: justify;
+}
+.blog-content h1,.blog-content h2, .blog-content h3, .blog-content h4{
+    color: black;
+    text-align: left;
+}
+
+.other-posts-by-author{
+    background-color: #A2A378;
+    padding: 30px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.more-posts-header{
+    width: 100%;
+    padding: 20px;
+}
+.other-posts-by-author h3{
+    color: black;
+}
+.other-posts-by-author .btn{
+    /* position: absolute; */
+    /* top: 0;
+    right: 30px; */
+    float: right;
+}
+.more-posts{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+.more-posts .blog-details{
+border: 2px solid white;
+padding: 10px;
+}
