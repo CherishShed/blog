@@ -1,3 +1,5 @@
+import postController from "./postController.js";
+
 AOS.init({
     duration: 500,
     easing: "ease-in-out",
@@ -6,21 +8,8 @@ AOS.init({
     delay: 0
 });
 
-
-async function fetchAllPosts() {
-    const response = await fetch("http://localhost:8081/api/getallPosts");
-    const data = await response.json();
-    return data;
-
-}
-async function fetchPostById(url) {
-    const response = await fetch("http://localhost:8081/" + url);
-    const data = await response.json();
-    return data;
-
-}
 function setMainHighlight() {
-    fetchAllPosts()
+    postController.fetchAllPosts()
         .then((result) => {
             // console.log(result)
             if (result.inSession) {
@@ -50,9 +39,9 @@ function setMainHighlight() {
 setMainHighlight();
 
 function otherHghlights() {
-    fetchAllPosts()
+    postController.fetchAllPosts()
         .then((result) => {
-            console.log(result)
+            // console.log(result)
             result.data.slice(1, 4).forEach((post) => {
                 let blogDetails = $("<div></div>");
                 $(blogDetails).addClass("blog-details")
@@ -100,14 +89,3 @@ function otherHghlights() {
 }
 
 otherHghlights();
-
-$(".redirect").click(() => {
-    fetchPostById("api" + $(this).attr('href'))
-        .then((post) => {
-            let openPost = post.data;
-            $(".post-hero-image img").attr("src", "data:image/png;base64," + openPost.coverImage);
-            $("#open-post-title").text(openPost.title);
-            $("#open-post-description").text(openPost.description);
-            $("#open-post-author").text(openPost.author);
-        });
-})

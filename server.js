@@ -166,7 +166,7 @@ app.get("/posts/:id", (req, res) => {
     const { id } = req.params
     Post.findById(id).populate('author', 'name')
         .then((data) => {
-            console.log(data);
+            // console.log(data);
             // data.forEach((post) => {
             //     post.coverImage.data = post.coverImage.data.toString('base64');
             // })
@@ -174,6 +174,7 @@ app.get("/posts/:id", (req, res) => {
         })
 })
 app.get("/api/posts/:id", (req, res) => {
+    console.log("we ae here now")
     const { id } = req.params
     var inSession = false
     if (req.isAuthenticated()) {
