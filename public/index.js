@@ -13,10 +13,16 @@ async function fetchAllPosts() {
     return data;
 
 }
+async function fetchPostById(url) {
+    const response = await fetch("http://localhost:8081/" + url);
+    const data = await response.json();
+    return data;
+
+}
 function setMainHighlight() {
     fetchAllPosts()
         .then((result) => {
-            console.log(result)
+            // console.log(result)
             if (result.inSession) {
                 $('.get-started').css('display', 'none');
             }
@@ -28,7 +34,7 @@ function setMainHighlight() {
             let viewIcon = $("<i></i>");
             $(viewIcon).addClass("fa-solid fa-arrow-right");
             $(viewMore).append(viewIcon);
-            $("#main-highlight-detais").append(viewMore);
+            $("#main-highlight-details").append(viewMore);
             $("#main-highlight-date").text(new Date(mainBlog.createdAt).toDateString());
             $("#main-highlight-blog-author").text(mainBlog.author.name);
             $("#main-highlight-title").text(mainBlog.title);
@@ -94,3 +100,14 @@ function otherHghlights() {
 }
 
 otherHghlights();
+
+$(".redirect").click(() => {
+    fetchPostById("api" + $(this).attr('href'))
+        .then((post) => {
+            let openPost = post.data;
+            $(".post-hero-image img").attr("src", "data:image/png;base64," + openPost.coverImage);
+            $("#open-post-title").text(openPost.title);
+            $("#open-post-description").text(openPost.description);
+            $("#open-post-author").text(openPost.author);
+        });
+})

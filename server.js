@@ -10,12 +10,13 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const cors = require('cors');
 const { profile } = require("console");
+const { title } = require("process");
 var corsOptions = {
     origin: "*"
 }
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
-app.use(express.static("public"));
+app.use(express.static("public", { root: __dirname }));
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use(session({
@@ -90,7 +91,7 @@ app.get("/", (req, res) => {
     if (req.isAuthenticated()) {
         // console.log(req.user)
         const inSession = true
-        User.findById(req.user.id).populate("posts")
+        User.findById(req.user.id).populate("blogposts")
             .then((user) => {
                 Post.find({})
                     .then((post) => {
@@ -128,7 +129,7 @@ app.get("/api/getallPosts", (req, res) => {
 })
 
 app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] })
-)
+);
 app.get('/auth/google/blog', passport.authenticate('google', {
     successRedirect: '/',
     failureRedirect: '/login'
@@ -161,17 +162,32 @@ app.get("/signup", (req, res) => {
     }
 })
 
-app.get("/api/post:id", (req, res) => {
+app.get("/posts/:id", (req, res) => {
+    const { id } = req.params
+    Post.findById(id).populate('author', 'name')
+        .then((data) => {
+            console.log(data);
+            // data.forEach((post) => {
+            //     post.coverImage.data = post.coverImage.data.toString('base64');
+            // })
+            res.render('blog', { title: data.title });
+        })
+})
+app.get("/api/posts/:id", (req, res) => {
     const { id } = req.params
     var inSession = false
     if (req.isAuthenticated()) {
         // console.log(req.user)
         inSession = true
     }
-    User.findById(id)
+    Post.findById(id).populate("author", "users")
         .then((data) => {
+            // console.log(data)
             // console.log(user);
-            res.json({ data, inSession });
+            User.findById(data.author.id).populate("posts", "blogposts")
+                .then((user) => {
+                    res.json({ data, inSession, author: user });
+                })
         })
 })
 
