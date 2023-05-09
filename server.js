@@ -47,6 +47,8 @@ const postSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
+    content: String,
+    url: String,
     tags: [String]
 }, { timestamps: true })
 
@@ -159,18 +161,18 @@ app.get("/signup", (req, res) => {
     }
 })
 
-app.get("/viewpost?id", (req, res) => {
+app.get("/api/post:id", (req, res) => {
+    const { id } = req.params
+    var inSession = false
     if (req.isAuthenticated()) {
         // console.log(req.user)
-        const { id } = req.params
-        User.findById(id)
-            .then((post) => {
-                // console.log(user);
-                res.render("blog", { post });
-            })
-    } else {
-        res.redirect("/login");
+        inSession = true
     }
+    User.findById(id)
+        .then((data) => {
+            // console.log(user);
+            res.json({ data, inSession });
+        })
 })
 
 app.post("/signup", (req, res) => {
@@ -219,18 +221,13 @@ app.listen(PORT, () => {
 })
 
 // function populateDb() {
-//     let title = "lorem IpSUM";
-//     let description = "lorem ipsum dolorr";
-//     let image = "./public/Images/pexels-fauxels-3182771.jpg"
-//     let coverImage = fs.readFileSync(image).toString("base64");
-//     let author = "64595629318ca274f08981ad"
-//     let tags = ["Evil", "Good"]
-//     const newPost = new Post({
-//         title,
-//         description,
-//         coverImage,
-//         author,
-//         tags
-//     });
-//     newPost.save();
+//     const baseUrl = "/posts/"
+//     Post.find({})
+//         .then((result) => {
+//             result.forEach((post) => {
+//                 post.url = baseUrl + post.id
+//                 post.save();
+//             })
+//         })
+
 // }

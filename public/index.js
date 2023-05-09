@@ -17,8 +17,18 @@ function setMainHighlight() {
     fetchAllPosts()
         .then((result) => {
             console.log(result)
-            var mainBlog = result.data[0];
+            if (result.inSession) {
+                $('.get-started').css('display', 'none');
+            }
+            let mainBlog = result.data[0];
             $("#main-highlight-image img").attr('src', "data:image/png;base64," + mainBlog.coverImage);
+            let viewMore = $("<a></a>").text("Read More ");
+            $(viewMore).addClass("redirect");
+            $(viewMore).attr("href", mainBlog.url);
+            let viewIcon = $("<i></i>");
+            $(viewIcon).addClass("fa-solid fa-arrow-right");
+            $(viewMore).append(viewIcon);
+            $("#main-highlight-detais").append(viewMore);
             $("#main-highlight-date").text(new Date(mainBlog.createdAt).toDateString());
             $("#main-highlight-blog-author").text(mainBlog.author.name);
             $("#main-highlight-title").text(mainBlog.title);
@@ -34,8 +44,6 @@ function setMainHighlight() {
 setMainHighlight();
 
 function otherHghlights() {
-    var highlightNum = 1;
-
     fetchAllPosts()
         .then((result) => {
             console.log(result)
@@ -70,7 +78,13 @@ function otherHghlights() {
                     $(tagDets).addClass("tag btn btn-outline-dark")
                     $(blogTags).append(tagDets);
                 })
-                $(blogText).append(blogTitle, blogDescription, blogTags);
+                let viewMore = $("<a></a>").text("Read More ");
+                $(viewMore).addClass("redirect");
+                $(viewMore).attr("href", post.url);
+                let viewIcon = $("<i></i>");
+                $(viewIcon).addClass("fa-solid fa-arrow-right");
+                $(viewMore).append(viewIcon);
+                $(blogText).append(blogTitle, blogDescription, blogTags, viewMore);
                 $(blogDetails).append(blogImage, blogText);
 
                 $(".other-highlights").append(blogDetails);
