@@ -91,7 +91,7 @@ app.get("/", (req, res) => {
     if (req.isAuthenticated()) {
         // console.log(req.user)
         const inSession = true
-        User.findById(req.user.id).populate("blogposts")
+        User.findById(req.user.id).populate("posts")
             .then((user) => {
                 Post.find({})
                     .then((post) => {
@@ -181,11 +181,11 @@ app.get("/api/posts/:id", (req, res) => {
         // console.log(req.user)
         inSession = true
     }
-    Post.findById(id).populate("author", "users")
+    Post.findById(id).populate("author", "name")
         .then((data) => {
             // console.log(data)
             // console.log(user);
-            User.findById(data.author.id).populate("posts", "blogposts")
+            User.findById(data.author.id).populate("posts")
                 .then((user) => {
                     res.json({ data, inSession, author: user });
                 })
