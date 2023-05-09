@@ -42,7 +42,7 @@ h1, h2, h3, h4, h5{
     background-color: transparent;
 
 }
-.nav-link{
+.nav-link:not(.btn){
     color: #0A4D68;
     font-weight: 500;
     font-size: 18px;
@@ -60,6 +60,10 @@ gap: 50px;
 .create-post{
     background-color: #9E6F21;
     color: white;
+}
+
+.logout{
+    
 }
 .newsletter{
     width: 100%;

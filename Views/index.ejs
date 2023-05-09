@@ -56,8 +56,8 @@
                         class="nav-link btn btn-outline-dark create-post" role="button">create
                         Post <i class="fa-solid fa-pen-to-square fa-shake"></i></a>
                 </li>
-                <li class="nav-item" role="button"><a href="/logout" class="nav-link btn btn-outline-dark create-post"
-                        role="button">Log out<i class="fa-solid fa-pen-to-square fa-shake"></i></a>
+                <li class="nav-item" role="button"><a href="/logout" class="nav-link btn btn-danger logout"
+                        role="button">Log out <i class="fa-solid fa-right-from-bracket"></i></a>
                 </li>
                 <li class="nav-item profile-pic"></li>
             </ul>
@@ -74,47 +74,28 @@
         </div>
     </div>
 
-    <section class="highlights-section">
-        <h3>Blog of the week</h3>
+    <section class="highlights-section" data-aos="zoom-out-up">
+        <h3>Highlight of the week</h3>
         <div class="row highlight-group">
             <div class="blog-details" id="main-highlight">
                 <div id="main-highlight-image" class="blog-image">
                     <div class="overlay"></div>
                     <img src="" alt="">
-                    <p class="blog-date" id="main-highlight-date"><span class="blog-author"
-                            id="main-highlight-blog-author">Shed</span> 20
-                        Jan 2004</p>
+                    <p class="blog-date"><span id="main-highlight-date"></span><span class="blog-author"
+                            id="main-highlight-blog-author"></span></p>
                 </div>
 
                 <div class="blog-details" id="main-highlight-details">
-
+                    <a href="" class="redirect">Read More<i class="fa-solid fa-arrow-right" title="Read more"></i></a>
                     <h5 id="main-highlight-title" class="blog-title"></h5>
-                    <p id="main-highlight-description" class="blog-description">>
+                    <p id="main-highlight-description" class="blog-description">
                     <div class="blog-tags" id="main-highlight-tags">
-                        <p class="tag btn btn-outline-dark"></p>
-                        <p class="tag btn btn-outline-dark"></p>
+
                     </div>
                 </div>
             </div>
             <div class="other-highlights">
                 <!-- add the class row to each of the highlights -->
-                <div class="blog-details">
-                    <div class="blog-image">
-                        <div class="overlay"></div>
-                        <img src=""></img>
-                        <p class="blog-date"><span class="blog-author"></span></p>
-                    </div>
-                    <div class="blog-text">
-
-                        <h5 class="blog-title"></h5>
-                        <p class="blog-description">
-                        </p>
-                        <div class="blog-tags">
-                            <p class="tag btn btn-outline-dark"></p>
-                            <p class="tag btn btn-outline-dark"></p>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>

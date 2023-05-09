@@ -9,6 +9,7 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const cors = require('cors');
+const { profile } = require("console");
 var corsOptions = {
     origin: "*"
 }
@@ -30,14 +31,22 @@ const userSchema = new mongoose.Schema({
     username: String,
     password: String,
     name: String,
-    posts: [mongoose.Schema.Types.ObjectId]
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "blogPost"
+    }],
+    googleId: String,
+    profilePic: String
 })
 
 const postSchema = new mongoose.Schema({
     title: String,
     description: String,
     coverImage: String,
-    author: mongoose.Schema.Types.ObjectId,
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
+    },
     tags: [String]
 }, { timestamps: true })
 
@@ -51,7 +60,8 @@ const Post = mongoose.model("blogPost", postSchema);
 passport.use(User.createStrategy());
 passport.serializeUser(function (user, cb) {
     process.nextTick(function () {
-        cb(null, { id: user.id, username: user.username, name: user.name });
+
+        cb(null, { id: user.id, username: user.username, name: user.name, });
     });
 });
 
@@ -67,38 +77,50 @@ passport.use(new GoogleStrategy({
 },
     function (accessToken, refreshToken, profile, cb) {
         // console.log(profile)
-        User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value }, function (err, user) {
+        User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, name: profile.displayName, profilePic: profile._json.picture }, function (err, user) {
             return cb(err, user);
         });
     }
 ));
 
 app.get("/", (req, res) => {
+    // populateDb();
     if (req.isAuthenticated()) {
         // console.log(req.user)
-        User.findById(req.user.id)
+        const inSession = true
+        User.findById(req.user.id).populate("posts")
             .then((user) => {
                 Post.find({})
                     .then((post) => {
-                        res.render("index", { user, post })
+                        res.render("index", { user, post, inSession })
                     }
                         // console.log(user);
                     );
             })
     } else {
-        res.redirect("/login");
+        Post.find({})
+            .then((post) => {
+                res.render("index", { post })
+            }
+                // console.log(user);
+            );
     }
 })
 
 app.get("/api/getallPosts", (req, res) => {
     // console.log(req.user)
-    Post.find({})
+    var inSession = false
+    if (req.isAuthenticated()) {
+        // console.log(req.user)
+        inSession = true
+    }
+    Post.find({}).populate('author', 'name')
         .then((data) => {
             // console.log(user);
             // data.forEach((post) => {
             //     post.coverImage.data = post.coverImage.data.toString('base64');
             // })
-            res.json(data);
+            res.json({ data, inSession });
         })
 
 })
@@ -195,3 +217,20 @@ var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log("listening on port " + PORT);
 })
+
+// function populateDb() {
+//     let title = "lorem IpSUM";
+//     let description = "lorem ipsum dolorr";
+//     let image = "./public/Images/pexels-fauxels-3182771.jpg"
+//     let coverImage = fs.readFileSync(image).toString("base64");
+//     let author = "64595629318ca274f08981ad"
+//     let tags = ["Evil", "Good"]
+//     const newPost = new Post({
+//         title,
+//         description,
+//         coverImage,
+//         author,
+//         tags
+//     });
+//     newPost.save();
+// }
