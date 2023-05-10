@@ -29,112 +29,81 @@
 
 <body>
     <!-- <hr class="divider"> -->
-    <nav class="navbar navbar-expand-md">
-        <a class="navbar-brand" href="#">SoroSoke</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-
-        <!-- Navbar links -->
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">My Posts</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact Us</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav reg-login">
-                <li class="nav-item" role="button"><a href="/signup" class="nav-link btn btn-outline-dark get-started"
-                        role="button">Get
-                        Started</a>
-                </li>
-                <li class="nav-item" role="button"><a href="/signup" class="nav-link btn btn-outline-dark create-post"
-                        role="button">create
-                        Post <i class="fa-solid fa-pen-to-square fa-shake"></i></a>
-                </li>
-                <li class="nav-item profile-pic"></li>
-            </ul>
-        </div>
-    </nav>
-    <div class="post-hero">
-        <div class="post-hero-image">
-            <img src="" alt="">
-        </div>
-        <div class="post-intro">
-            <h2 id="open-post-title"></h2>
-            <p id="open-post-description"></p>
-            <div class="author-info">
-                <p id="open-post-author"></p>
+    <%- include('partials/nav.ejs') %>
+        <div class="post-hero">
+            <div class="post-hero-image">
+                <img src="" alt="">
             </div>
-        </div>
-    </div>
-    <div id="open-post-content" class="blog-content">
-        <p></p>
-    </div>
-
-    <div class="other-posts-by-author">
-        <div class="more-posts-header">
-            <p>Keep reading</p>
-            <h3>More from this author</h3>
-            <a href="" class="view-all btn bg-dark text-white" role="button">View all posts</a>
-        </div>
-        <div class="more-posts"></div>
-    </div>
-    </div>
-    <footer data-aos="fade-up">
-        <form class="subscribe">
-            <div>
-                <h3>Sign Up to our newsletter</h3>
-                <p>Stay up to date with the latest news, announcement and articles</p>
-            </div>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Your Email">
-                <div class="input-group-append">
-                    <button class="btn btn-dark">Subscribe</button>
+            <div class="post-intro">
+                <h2 id="open-post-title"></h2>
+                <p id="open-post-description"></p>
+                <div class="author-info">
+                    <p id="open-post-author"></p>
                 </div>
             </div>
-        </form>
-
-        <div class="footer-items">
-            <div class="col">
-                <a class="navbar-brand" href="#">SoroSoke</a>
-                <p>Write to your heart's content</p>
-            </div>
-            <div class="col">
-                <ul>
-                    <li><a href="">Pricing</a></li>
-                    <li><a href="">Contact Us</a></li>
-                    <li><a href="">Terms and Conditions</a></li>
-                    <li><a href="">Legal</a></li>
-                </ul>
-            </div>
         </div>
-        <h5>&copy;2023 SoroSoke</h5>
-    </footer>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-    <script>
-        AOS.init({
-            duration: 500,
-            easing: "ease-in-out",
-            once: true,
-            mirror: false,
-            delay: 0
-        });
-    </script>
-    <script src="/post.js" type="module"></script>
+        <div id="open-post-content" class="blog-content">
+            <p></p>
+        </div>
+
+        <div class="other-posts-by-author">
+            <div class="more-posts-header">
+                <p>Keep reading</p>
+                <h3>More from this author</h3>
+                <a href="" class="view-all btn bg-dark text-white" role="button">View all posts</a>
+            </div>
+            <div class="more-posts"></div>
+        </div>
+        </div>
+        <footer data-aos="fade-up">
+            <form class="subscribe">
+                <div>
+                    <h3>Sign Up to our newsletter</h3>
+                    <p>Stay up to date with the latest news, announcement and articles</p>
+                </div>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Your Email">
+                    <div class="input-group-append">
+                        <button class="btn btn-dark">Subscribe</button>
+                    </div>
+                </div>
+            </form>
+
+            <div class="footer-items">
+                <div class="col">
+                    <a class="navbar-brand" href="#">SoroSoke</a>
+                    <p>Write to your heart's content</p>
+                </div>
+                <div class="col">
+                    <ul>
+                        <li><a href="">Pricing</a></li>
+                        <li><a href="">Contact Us</a></li>
+                        <li><a href="">Terms and Conditions</a></li>
+                        <li><a href="">Legal</a></li>
+                    </ul>
+                </div>
+            </div>
+            <h5>&copy;2023 SoroSoke</h5>
+        </footer>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        <script>
+            AOS.init({
+                duration: 500,
+                easing: "ease-in-out",
+                once: true,
+                mirror: false,
+                delay: 0
+            });
+        </script>
+        <script src="/post.js" type="module"></script>
 </body>
 
 </html>

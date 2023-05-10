@@ -35,7 +35,8 @@ postController.fetchPostById("api" + postUrl)
             let blogOwnerDets = $("<p></p>");
             let blogDate = $("<span></span>").text(new Date(post.createdAt).toDateString());
             $(blogOwnerDets).addClass("blog-date");
-            let blogAuthor = $("<span></span>").text(post.author.name);
+            let blogAuthor = $("<span></span>").text(openPost.author.name);
+            console.log(post.author.name)
             $(blogAuthor).addClass("blog-author");
             $(blogOwnerDets).append(blogDate, blogAuthor);
             $(blogImage).append(overlay, blogImageImg, blogOwnerDets);
@@ -68,8 +69,8 @@ postController.fetchPostById("api" + postUrl)
         })
     });
 
-postController.fetchAllPosts()
-    .then((result) => {
-        // console.log(result)
+// postController.fetchAllPosts()
+//     .then((result) => {
+//         // console.log(result)
 
-    })
+//     })
