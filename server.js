@@ -9,8 +9,7 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const cors = require('cors');
-const { profile } = require("console");
-const { title } = require("process");
+
 var corsOptions = {
     origin: "*"
 }
@@ -118,13 +117,18 @@ app.get("/api/getallPosts", (req, res) => {
         // console.log(req.user)
         inSession = true
     }
+    var signedInUser = false
+    if (req.isAuthenticated()) {
+        inSession = true
+        signedInUser = req.user;
+    }
     Post.find({}).populate('author', 'name')
         .then((data) => {
             // console.log(user);
             // data.forEach((post) => {
             //     post.coverImage.data = post.coverImage.data.toString('base64');
             // })
-            res.json({ data, inSession });
+            res.json({ data, inSession, signedInUser });
         })
 
 })
@@ -224,6 +228,13 @@ app.post("/login", (req, res) => {
             })
         }
     })
+})
+app.get("/createpost", (req, res) => {
+    if (req.isAuthenticated()) {
+
+    } else {
+        res.redirect("/login")
+    }
 })
 app.get("/logout", (req, res) => {
     req.logOut((err) => {

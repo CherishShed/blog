@@ -56,7 +56,7 @@ h1, h2, h3, h4, h5{
 margin: 0 auto;
 gap: 50px;
 align-items: center;
-justify-content: center;
+/* justify-content: center; */
 }
 .reg-login{
     /* margin: 0; */
@@ -70,10 +70,56 @@ justify-content: center;
     display: none;
 }
 
-.profile-nav{
+.profile-nav {
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    align-self: flex-end;
+    align-items: center;
+    justify-content: center;
+    /* gap: 20px */
+    /* border: 2px solid black; */
+    /* padding: 0 5px; */
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    /* justify-content: center; */
+    gap: 5px;
+    color: black;
+    padding: 0 5px;
+    margin: 0;
+    /* position: absolute; */
+}
+
+.dropdown-toggle {
+    background-color: transparent;
+    color: black;
+    border-color: transparent;
+}
+
+#profile-pic {
+    border-radius: 10px;
+    max-height: 50px;
+    max-width: 50px;
+}
+#profile-name{
+    padding: 0;
+    margin: 0;
+}
+.profile-dropdown{
+    position: relative;
+}
+.profile-options{
+    position: absolute;
+    right: 500px;
+    top: 50px;
+    z-index: 20;
+    /* align-items: flex-start;
+    justify-content: left; */
 }
 .newsletter{
     width: 100%;

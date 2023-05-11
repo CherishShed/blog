@@ -15,6 +15,20 @@ function setMainHighlight() {
             if (result.inSession) {
                 $('.get-started').css('display', 'none');
                 $('.logout').css('display', 'flex');
+            } else {
+                $('.profile-nav').css('display', 'none');
+            }
+            if (result.signedInUser) {
+                if (result.signedInUser.googleProfilePic != "") {
+                    var profilePicture = result.signedInUser.googleProfilePic;
+                }
+                else if (result.signedInUser.profilPic != "") {
+                    var profilePicture = result.signedInUser.profilePic;
+                }
+                console.log(result.signedInUser);
+                $("#profile-name").text(result.signedInUser.name.split(" ")[0]);
+                $("#profile-pic").attr('src', profilePicture)
+
             }
             let mainBlog = result.data[0];
             $("#main-highlight-image img").attr('src', "data:image/png;base64," + mainBlog.coverImage);
@@ -37,7 +51,7 @@ function setMainHighlight() {
         })
 }
 
-setMainHighlight();
+
 
 function otherHghlights() {
     postController.fetchAllPosts()
@@ -89,4 +103,7 @@ function otherHghlights() {
         })
 }
 
-otherHghlights();
+window.onload = function () {
+    setMainHighlight();
+    otherHghlights();
+};

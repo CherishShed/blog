@@ -9,6 +9,20 @@ postController.fetchPostById("api" + postUrl)
         } else {
 
             $('.get-started').css('display', 'flex');
+            $('.profile-nav').css('display', 'none');
+
+        }
+        if (post.signedInUser) {
+            if (post.signedInUser.googleProfilePic != "") {
+                var profilePicture = post.signedInUser.googleProfilePic;
+            }
+            else if (post.signedInUser.profilPic != "") {
+                var profilePicture = post.signedInUser.profilePic;
+            }
+            console.log(profilePicture);
+            $("#profile-pic").attr('src', profilePicture)
+            $("#profile-name").text(post.signedInUser.name);
+
         }
         console.log("we are here");
         let openPost = post.data;
