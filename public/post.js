@@ -5,7 +5,10 @@ console.log("api" + postUrl);
 postController.fetchPostById("api" + postUrl)
     .then((post) => {
         if (post.inSession) {
-            $(".get-started").css("display", "none");
+            $('.logout').css('display', 'flex');
+        } else {
+
+            $('.get-started').css('display', 'flex');
         }
         console.log("we are here");
         let openPost = post.data;

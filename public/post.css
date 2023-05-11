@@ -61,12 +61,21 @@ h5 {
 .get-started{
     background-color: rgba(10, 77, 104, 0.3);
     color: white;
+    display: none;
 }
 .navbar-nav {
     margin: 0 auto;
     gap: 50px;
 }
 
+.logout{
+    display: none;
+}
+.profile-nav {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
 .post-hero {
     /* position: relative; */
     background-color: #83764F;

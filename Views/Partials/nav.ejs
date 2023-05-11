@@ -26,10 +26,32 @@
                     role="button">create
                     Post <i class="fa-solid fa-pen-to-square fa-shake"></i></a>
             </li>
-            <li class="nav-item" role="button"><a href="/logout" class="nav-link btn btn-danger logout"
+            <!-- <li class="nav-item" role="button"><a href="/logout" class="nav-link btn btn-danger logout"
                     role="button">Log out <i class="fa-solid fa-right-from-bracket"></i></a>
+            </li> -->
+            <li class="nav-item profile-nav">
+                <div class="profile-info">
+                    <img src="" alt="" id="profile pic">
+                    <p id="profile-name"></p>
+                </div>
+
+                <div class="dropdown profile-dropdown">
+                    <button type="button" class="btn dropdown-toggle" data-toggle="dropdown">
+                    </button>
+                    <div class="dropdown-menu profile-options">
+                        <a class="dropdown-item my-profile" href="#">View Profile</a>
+                        <a class="dropdown-item" href="/logout">Log out</a>
+                    </div>
+                </div>
             </li>
-            <li class="nav-item profile-pic"></li>
         </ul>
     </div>
 </nav>
+<!-- <script>
+    if (post.inSession) {
+        $('.logout').css('display', 'flex');
+    } else {
+
+        $('.get-started').css('display', 'flex');
+    }
+</script> -->

@@ -14,6 +14,7 @@ function setMainHighlight() {
             // console.log(result)
             if (result.inSession) {
                 $('.get-started').css('display', 'none');
+                $('.logout').css('display', 'flex');
             }
             let mainBlog = result.data[0];
             $("#main-highlight-image img").attr('src', "data:image/png;base64," + mainBlog.coverImage);

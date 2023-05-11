@@ -37,7 +37,8 @@ const userSchema = new mongoose.Schema({
         ref: "blogPost"
     }],
     googleId: String,
-    profilePic: String
+    googleProfilePic: String,
+    profilePic: String,
 })
 
 const postSchema = new mongoose.Schema({
@@ -63,8 +64,8 @@ const Post = mongoose.model("blogPost", postSchema);
 passport.use(User.createStrategy());
 passport.serializeUser(function (user, cb) {
     process.nextTick(function () {
-
-        cb(null, { id: user.id, username: user.username, name: user.name, });
+        // console.log(user)
+        cb(null, user);
     });
 });
 
@@ -80,7 +81,7 @@ passport.use(new GoogleStrategy({
 },
     function (accessToken, refreshToken, profile, cb) {
         // console.log(profile)
-        User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, name: profile.displayName, profilePic: profile._json.picture }, function (err, user) {
+        User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, name: profile.displayName, googleProfilePic: profile._json.picture }, function (err, user) {
             return cb(err, user);
         });
     }
@@ -177,17 +178,19 @@ app.get("/api/posts/:id", (req, res) => {
     console.log("we ae here now")
     const { id } = req.params
     var inSession = false
+    var signedInUser = false
     if (req.isAuthenticated()) {
-        // console.log(req.user)
         inSession = true
+        signedInUser = req.user;
     }
+    // console.log(signedInUser)
     Post.findById(id).populate("author", "name")
         .then((data) => {
             // console.log(data)
             // console.log(user);
             User.findById(data.author.id).populate("posts")
                 .then((user) => {
-                    res.json({ data, inSession, author: user });
+                    res.json({ data, inSession, author: user, signedInUser });
                 })
         })
 })
