@@ -16,6 +16,11 @@ function fillPresentDetails(data) {
         $("#emailaddress").prop("disabled", true)
         $("#emailaddress").val(data.username)
     }
+    if (data.googleProfilePic != "") {
+        $(".profile-image").attr("src", data.googleProfilePic)
+    } else if (data.profilePic != "") {
+        $(".profile-image").attr("src", "data:image/png;base64," + data.profilePic)
+    }
 
 }
-fillPresentDetails(data[0]);
+fillPresentDetails(data);

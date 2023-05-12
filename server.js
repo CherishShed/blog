@@ -209,12 +209,9 @@ app.post("/profiledetails", (req, res) => {
 })
 app.get("/api/getmyprofile", (req, res) => {
     if (req.isAuthenticated()) {
-        User.find({ googleId: req.user.id }).populate("posts")
-            .then((data) => {
-                console.log(data)
-                // console.log(user)
-                res.json(data);
-            })
+        // console.log(req.user);
+        res.json(req.user);
+
     } else {
         res.redirect("/login")
     }
