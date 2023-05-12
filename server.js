@@ -31,6 +31,8 @@ const userSchema = new mongoose.Schema({
     username: String,
     password: String,
     name: String,
+    firstName: String,
+    lastName: String,
     posts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "blogPost"
@@ -79,8 +81,8 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:8081/auth/google/blog"
 },
     function (accessToken, refreshToken, profile, cb) {
-        // console.log(profile)
-        User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, name: profile.displayName, googleProfilePic: profile._json.picture }, function (err, user) {
+        console.log(profile)
+        User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, name: profile.displayName, googleProfilePic: profile._json.picture, firstName: profile.name.givenName, lastName: profile.name.familyName }, function (err, user) {
             return cb(err, user);
         });
     }

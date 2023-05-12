@@ -1,0 +1,51 @@
+* {
+    box-sizing: border-box;
+}
+
+:root {
+    --whiteGreen: #F6FFDE;
+    --grad: linear-gradient(to bottom right, #F97B22, #9E6F21, #FEE8B0, #9CA777, #9CA777, #0A4D68);
+    --text: #9E6F21;
+    --footer: #83764F;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    background-color: #fdfff7;
+    font-family: 'Kanit', sans-serif;
+
+}
+.profile-image{
+    width: 150px;
+    height: 150px;
+    text-align: center ;
+    margin: 0 auto;
+}
+form{
+    min-width: fit-content;
+    width: 300px;
+    height: 40%;
+    /* position: absolute; */
+    margin: 0 auto;
+    margin-top: 10%;
+    align-content: center;
+}
+.pic-container{
+    display: flex;
+    align-items: baseline;
+    gap:0;
+    justify-content: center;
+    justify-content: center;
+}
+label{
+    display: block;
+}
+
+#emailaddress{
+width: 100%
+}
+input{
+    padding: 5px;
+}
