@@ -81,7 +81,7 @@ passport.use(new GoogleStrategy({
     callbackURL: "http://localhost:8081/auth/google/blog"
 },
     function (accessToken, refreshToken, profile, cb) {
-        console.log(profile)
+        // console.log(profile)
         User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, name: profile.displayName, googleProfilePic: profile._json.picture, firstName: profile.name.givenName, lastName: profile.name.familyName }, function (err, user) {
             return cb(err, user);
         });
@@ -138,7 +138,7 @@ app.get("/api/getallPosts", (req, res) => {
 app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] })
 );
 app.get('/auth/google/blog', passport.authenticate('google', {
-    successRedirect: '/',
+    successRedirect: '/profiledetails',
     failureRedirect: '/login'
 }));
 
@@ -149,7 +149,7 @@ app.get("/login", (req, res) => {
         User.findById(req.user.id)
             .then((user) => {
                 // console.log(user);
-                res.redirect("/");
+                res.redirect("/profiledetails");
             })
     } else {
         res.render("login");
@@ -162,7 +162,7 @@ app.get("/signup", (req, res) => {
         User.findById(req.user.id)
             .then((user) => {
                 // console.log(user);
-                res.redirect("/");
+                res.redirect("/profiledetails");
             })
     } else {
         res.render("signup");
@@ -201,6 +201,26 @@ app.get("/api/posts/:id", (req, res) => {
         })
 })
 
+app.get("/profiledetails", (req, res) => {
+    res.render("details")
+})
+app.post("/profiledetails", (req, res) => {
+
+})
+app.get("/api/getmyprofile", (req, res) => {
+    if (req.isAuthenticated()) {
+        User.find({ googleId: req.user.id }).populate("posts")
+            .then((data) => {
+                console.log(data)
+                // console.log(user)
+                res.json(data);
+            })
+    } else {
+        res.redirect("/login")
+    }
+
+})
+
 app.post("/signup", (req, res) => {
     User.register({ username: req.body.username }, req.body.password, (err, foundUser) => {
         if (err) {
@@ -208,12 +228,13 @@ app.post("/signup", (req, res) => {
             res.redirect("/signup");
         } else {
             passport.authenticate("local")(req, res, () => {
-                res.redirect("/")
+                res.redirect("/profiledetails")
             });
         }
     })
 
 })
+
 app.post("/login", (req, res) => {
     res.write
     const user = new User({
@@ -226,7 +247,7 @@ app.post("/login", (req, res) => {
             res.redirect("/login")
         } else {
             passport.authenticate("local")(req, res, () => {
-                res.redirect("/");
+                res.redirect("/profiledetails");
             })
         }
     })

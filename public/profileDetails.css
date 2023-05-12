@@ -17,6 +17,13 @@ body {
     font-family: 'Kanit', sans-serif;
 
 }
+.navbar-brand {
+    color: var(--text);
+    font-weight: 500;
+    font-size: 30px;
+    text-align: center;
+    display: block;
+}
 .profile-image{
     width: 150px;
     height: 150px;
@@ -31,6 +38,12 @@ form{
     margin: 0 auto;
     margin-top: 10%;
     align-content: center;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 2px solid var(--text);
+    padding: 20px;
+    box-shadow: 2px 2px 2px black;
 }
 .pic-container{
     display: flex;
@@ -48,4 +61,8 @@ width: 100%
 }
 input{
     padding: 5px;
+}
+.submit-button{
+    display: block;
+    margin: 0 auto
 }

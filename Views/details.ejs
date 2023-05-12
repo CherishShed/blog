@@ -22,25 +22,29 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300&display=swap" rel="stylesheet">
-    <link href="../public/profileDetails.css" rel="stylesheet" />
+    <link href="/profileDetails.css" rel="stylesheet" />
     <title>Profile</title>
 </head>
 
 <body>
     <section class="details-container container-fluid">
         <form action="/profileDetails" method="POST">
+            <!-- Ará Òrun Kìn-ìn Kin-in: Òy-Yò -->
+            <h2 class="navbar-brand">SóróSoke</h2>
             <div class="pic-container">
-                <img src="../public/Images/avatar.png" alt="" class="profile-image">
+                <img src="/Images/avatar.png" alt="" class="profile-image">
                 <label>
-                    <input type="file" style="display:none" id="picfileInput" />
+                    <input type="file" style="display:none" id="picfileInput" required />
                     <span class="pic-icon btn btn-outline-dark"
                         onclick="document.getElementById('picfileInput').click()">Upload Picture <i
                             class="fa-solid fa-file-arrow-up"></i></span>
                 </label>
             </div>
-            <label for=""><input type="text" name="fname" placeholder="First Name" id="fname"> <input type="text"
-                    name="lname" placeholder="Last Name" id="lname"></label>
+            <label for=""><input type="text" name="fname" placeholder="First Name" id="fname" required> <input
+                    type="text" name="lname" placeholder="Last Name" id="lname" required></label>
             <input type="email" name="email" id="emailaddress" placeholder="Email">
+
+            <button type="submit" class="submit-button btn btn-outline-success">Submit</button>
 
         </form>
     </section>
@@ -54,7 +58,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
         integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
         crossorigin="anonymous"></script>
-    <script src="../public/profileDetails.js"></script>
+    <script src="/profileDetails.js" type="module"></script>
 </body>
 
 </html>
