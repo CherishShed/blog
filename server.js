@@ -83,6 +83,12 @@ passport.use(new GoogleStrategy({
 },
     function (accessToken, refreshToken, profile, cb) {
         // console.log(profile)
+        // User.findOne({ username: profile.emails[0] })
+        //     .then((err, foundUser) => {
+        //         if (foundUser) {
+        //             return (cb(err, foundUser))
+        //         }
+        //     })
         User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, name: profile.displayName, googleProfilePic: profile._json.picture, firstName: profile.name.givenName, lastName: profile.name.familyName }, function (err, user) {
             return cb(err, user);
         });
@@ -239,7 +245,18 @@ app.post("/profiledetails", upload.single('profilePic'), (req, res) => {
     //         console.log(foundUser);
     //     })
     User.findByIdAndUpdate(req.user._id, { $set: { profilePic: profilePic, firstName: req.body.fname, lastName: req.body.lname, username: req.body.email, name: `${req.body.fname} ${req.body.lname}` } })
-    res.redirect('/');
+        .then(() => {
+            if (fs.existsSync(req.file.path)) {
+                fs.unlink(req.file.path, (err) => {
+                    if (err) throw err;
+                    console.log('File deleted');
+                    console.log("Already")
+                });
+                res.redirect('/');
+            }
+
+        })
+
 })
 
 

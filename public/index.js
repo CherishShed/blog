@@ -19,7 +19,7 @@ function setMainHighlight() {
                 $('.profile-nav').css('display', 'none');
             }
             if (result.signedInUser) {
-                // console.log(result.signedInUser);
+                console.log(result.signedInUser);
                 if (result.signedInUser.profilePic != null) {
                     console.log("in here")
                     var profilePicture = result.signedInUser.profilePic;
@@ -30,7 +30,7 @@ function setMainHighlight() {
                     $("#profile-pic").attr('src', profilePicture)
                 }
 
-                console.log(result.signedInUser);
+                // console.log(result.signedInUser);
                 $("#profile-name").text(result.signedInUser.firstName);
 
 
