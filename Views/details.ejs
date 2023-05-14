@@ -28,7 +28,7 @@
 
 <body>
     <section class="details-container container-fluid">
-        <form action="/profileDetails" method="POST">
+        <form action="/profileDetails" method="POST" enctype="multipart/form-data">
             <!-- Ará Òrun Kìn-ìn Kin-in: Òy-Yò -->
             <h2 class="navbar-brand">SóróSoke</h2>
             <div class="pic-container">
@@ -36,11 +36,11 @@
                     <img src="/Images/avatar.png" alt="" class="profile-image">
                 </div>
                 <label>
-                    <input type="file" style="display:none" id="picfileInput" required />
-                    <span class="pic-icon btn btn-outline-dark"
-                        onclick="document.getElementById('picfileInput').click()">Change Picture <i
-                            class="fa-solid fa-file-arrow-up"></i></span>
+                    <input type="file" style="display:none" id="picfileInput" name="profilePic" accept="image/*" />
                 </label>
+                <span class="pic-icon btn btn-outline-dark"
+                    onclick="document.getElementById('picfileInput').click()">Change Picture <i
+                        class="fa-solid fa-file-arrow-up"></i></span>
             </div>
             <label for=""><input type="text" name="fname" placeholder="First Name" id="fname" required> <input
                     type="text" name="lname" placeholder="Last Name" id="lname" required></label>

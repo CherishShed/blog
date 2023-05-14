@@ -9,10 +9,11 @@ const passportLocalMongoose = require('passport-local-mongoose');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const cors = require('cors');
-
+const multer = require("multer");
 var corsOptions = {
     origin: "*"
 }
+const upload = multer({ dest: "uploads/" })
 app.use(express.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 app.use(express.static("public", { root: __dirname }));
@@ -138,7 +139,7 @@ app.get("/api/getallPosts", (req, res) => {
 app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] })
 );
 app.get('/auth/google/blog', passport.authenticate('google', {
-    successRedirect: '/profiledetails',
+    successRedirect: '/',
     failureRedirect: '/login'
 }));
 
@@ -148,8 +149,12 @@ app.get("/login", (req, res) => {
         // console.log(req.user)
         User.findById(req.user.id)
             .then((user) => {
+                if (user.firstName === "" || user.lastName === "" || (user.profilePic != "" || user.googleProfilePic != "")) {
+                    res.redirect("/profiledetails");
+                } else {
+                    res.redirect("/")
+                }
                 // console.log(user);
-                res.redirect("/profiledetails");
             })
     } else {
         res.render("login");
@@ -202,11 +207,42 @@ app.get("/api/posts/:id", (req, res) => {
 })
 
 app.get("/profiledetails", (req, res) => {
-    res.render("details")
+    let user = req.user
+    // console.log(user);
+    if (user.firstName != null && user.lastName != null && (user.profilePic != null || user.googleProfilePic != null)) {
+        res.redirect("/")
+    } else {
+        res.render("details");
+    }
 })
-app.post("/profiledetails", (req, res) => {
 
+
+app.post("/profiledetails", upload.single('profilePic'), (req, res) => {
+    console.log("i am trying")
+
+    // if(req.file)
+    if (req.file) {
+        // console.log(req.file.path);
+        var profilePic = fs.readFileSync(req.file.path);
+    } else {
+        // console.log("at all");
+        var profilePic = fs.readFileSync("./public/Images/avatar.png");
+        // console.log(profilePic);
+
+    }
+    profilePic = profilePic.toString("base64");
+    // console.log("geting id")
+    // console.log(req.user._id);
+    // User.findById(req.user._id)
+    //     .then((foundUser) => {
+    //         console.log("finding person...")
+    //         console.log(foundUser);
+    //     })
+    User.findByIdAndUpdate(req.user._id, { $set: { profilePic: profilePic, firstName: req.body.fname, lastName: req.body.lname, username: req.body.email, name: `${req.body.fname} ${req.body.lname}` } })
+    res.redirect('/');
 })
+
+
 app.get("/api/getmyprofile", (req, res) => {
     if (req.isAuthenticated()) {
         // console.log(req.user);
@@ -244,6 +280,7 @@ app.post("/login", (req, res) => {
             res.redirect("/login")
         } else {
             passport.authenticate("local")(req, res, () => {
+                // console.log(req.user)
                 res.redirect("/profiledetails");
             })
         }

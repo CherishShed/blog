@@ -102,6 +102,7 @@ align-items: center;
 }
 
 #profile-pic {
+    border: 2px solid black;
     border-radius: 10px;
     max-height: 50px;
     max-width: 50px;

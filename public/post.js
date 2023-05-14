@@ -13,11 +13,11 @@ postController.fetchPostById("api" + postUrl)
 
         }
         if (post.signedInUser) {
-            if (post.signedInUser.googleProfilePic != "") {
-                var profilePicture = post.signedInUser.googleProfilePic;
-            }
-            else if (post.signedInUser.profilPic != "") {
+
+            if (post.signedInUser.profilePic != "") {
                 var profilePicture = post.signedInUser.profilePic;
+            } else if (post.signedInUser.googleProfilePic != "") {
+                var profilePicture = post.signedInUser.googleProfilePic;
             }
             console.log(profilePicture);
             $("#profile-pic").attr('src', profilePicture)
