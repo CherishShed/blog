@@ -10,6 +10,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const cors = require('cors');
 const multer = require("multer");
+const { Console } = require("console");
 var corsOptions = {
     origin: "*"
 }
@@ -127,17 +128,25 @@ app.get("/api/getallPosts", (req, res) => {
         inSession = true
     }
     var signedInUser = false
-    if (req.isAuthenticated()) {
-        inSession = true
-        signedInUser = req.user;
-    }
+
     Post.find({}).populate('author', 'name')
         .then((data) => {
             // console.log(user);
             // data.forEach((post) => {
             //     post.coverImage.data = post.coverImage.data.toString('base64');
             // })
-            res.json({ data, inSession, signedInUser });
+            if (req.isAuthenticated()) {
+                inSession = true
+
+                User.findById(req.user._id)
+                    .then((user) => {
+                        // console.log(user);
+                        signedInUser = user;
+                        res.json({ data, inSession, signedInUser });
+                    })
+            } else {
+                res.json({ data, inSession, signedInUser });
+            }
         })
 
 })
@@ -170,11 +179,7 @@ app.get("/login", (req, res) => {
 app.get("/signup", (req, res) => {
     if (req.isAuthenticated()) {
         // console.log(req.user)
-        User.findById(req.user.id)
-            .then((user) => {
-                // console.log(user);
-                res.redirect("/profiledetails");
-            })
+        res.redirect("/profiledetails");
     } else {
         res.render("signup");
     }
@@ -224,7 +229,7 @@ app.get("/profiledetails", (req, res) => {
 
 
 app.post("/profiledetails", upload.single('profilePic'), (req, res) => {
-    console.log("i am trying")
+    // console.log("i am trying")
 
     // if(req.file)
     if (req.file) {
@@ -249,12 +254,9 @@ app.post("/profiledetails", upload.single('profilePic'), (req, res) => {
             if (fs.existsSync(req.file.path)) {
                 fs.unlink(req.file.path, (err) => {
                     if (err) throw err;
-                    console.log('File deleted');
-                    console.log("Already")
                 });
-                res.redirect('/');
             }
-
+            res.redirect('/');
         })
 
 })
