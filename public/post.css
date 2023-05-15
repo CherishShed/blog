@@ -41,6 +41,7 @@ h5 {
     top: 0;
     z-index: 10;
     background-color: transparent;
+    align-items: center;
 
 }
 
@@ -54,14 +55,18 @@ h5 {
     color: var(--text);
 }
 
-.create-post{
+.create-post, .get-started{
     background-color: #F6FFDE;
     color: black;
 }
 .get-started{
     background-color: rgba(10, 77, 104, 0.3);
     color: white;
+    text-align: center;
+        /* min-width: 100px; */
     display: none;
+    border: none;
+    
 }
 .navbar-nav {
     margin: 0 auto;
@@ -143,7 +148,7 @@ h5 {
 
 .post-hero-image {
     height: 100%;
-    /* min-width: 40%; */
+    /* min-width: 400px; */
     width: 55%;
     position: relative;
 }
@@ -166,7 +171,8 @@ h5 {
     width: 50%;
     margin: 0 auto;
     line-height: 30px;
-    text-align: justify;
+    text-align: left;
+    padding: 30px 0;
 }
 .blog-content h1,.blog-content h2, .blog-content h3, .blog-content h4{
     color: black;
@@ -198,9 +204,82 @@ h5 {
 .more-posts{
     display: flex;
     flex-direction: row;
-    justify-content: space-evenly;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    gap: 20px
 }
 .more-posts .blog-details{
 border: 2px solid white;
 padding: 10px;
+min-width: 250px;
+min-height: max-content;
+height: 400px;
+}
+.more-posts .blog-description-container{
+    max-height: 80px;
+    min-height: 50px;
+}
+
+@media (max-width: 700px) {
+    .post-hero{
+        padding-bottom: 0;
+    }
+    .post-hero-image {
+        width: 100%;
+    }
+    .post-intro {
+        width: 100%;
+        height: 80%;
+        padding: 30px;
+        margin: 0 auto;
+        color: white;
+    }
+}
+
+@media (max-width: 1000px) {
+
+    .navbar {
+        /* width: 100%; */
+        /* padding: 0; */
+        /* margin: 0; */
+        /* justify-content: space-between; */
+        position: fixed;
+        /* margin-top:30px ; */
+        min-height: 50px;
+        /* height: 50px; */
+        padding: 20px 0;
+        background-color:rgba(158, 111, 33,0.4);
+        backdrop-filter: blur(6px);
+    }
+
+    .navbar-nav {
+        gap: 5px;
+        justify-content: center;
+    }
+
+    .profile-nav {
+        position: absolute;
+        top: 0;
+        /* display: block; */
+        right: 0;
+        /* justify-content: center; */
+    }
+
+
+    .blog-details{
+        width: 400px;
+    }
+    .navbar-toggler {
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+
+    .other-highlights-header {
+        display: block;
+    }
+
+    .create-post {
+        width: 150px;
+    }
 }

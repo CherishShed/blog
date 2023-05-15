@@ -63,8 +63,11 @@ postController.fetchPostById("api" + postUrl)
             $(blogText).addClass("blog-text");
             let blogTitle = $("<h5></h5>").text(post.title);
             $(blogTitle).addClass("blog-title");
+            let blogDescriptionContainer = $("<div></div>");
+            $(blogDescriptionContainer).addClass("blog-description-container");
             let blogDescription = $("<p></p>").text(post.description);
             $(blogDescription).addClass("blog-description");
+            $(blogDescriptionContainer).append(blogDescription);
             let blogTags = $("<div></div>");
             $(blogTags).addClass("blog-tags");
             post.tags.forEach((tag) => {
@@ -78,10 +81,24 @@ postController.fetchPostById("api" + postUrl)
             let viewIcon = $("<i></i>");
             $(viewIcon).addClass("fa-solid fa-arrow-right");
             $(viewMore).append(viewIcon);
-            $(blogText).append(blogTitle, blogDescription, blogTags, viewMore);
+            $(blogText).append(blogTitle, blogDescriptionContainer, blogTags, viewMore);
             $(blogDetails).append(blogImage, blogText);
 
             $(".more-posts").append(blogDetails);
+
+
+            const longText = $(blogDescription);
+            const maxHeight = 80; // Adjust this value to match the desired height
+            console.log(longText.outerHeight())
+
+
+            if (longText.outerHeight() > maxHeight) {
+                console.log("greater than max height")
+                while (longText.outerHeight() > maxHeight) {
+                    console.log("still here")
+                    longText.text(longText.text().replace(/\W*\s(\S)*$/, '...'));
+                }
+            }
 
         })
     });
