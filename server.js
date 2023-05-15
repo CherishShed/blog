@@ -57,6 +57,12 @@ const postSchema = new mongoose.Schema({
     tags: [String]
 }, { timestamps: true })
 
+const reviewSchema = new mongoose.Schema({
+    person: String,
+    comment: String,
+    reviewImage: String,
+}, { timestamps: true })
+
 
 
 
@@ -64,6 +70,7 @@ userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
 const User = mongoose.model("user", userSchema);
 const Post = mongoose.model("blogPost", postSchema);
+const Review = mongoose.model("review", reviewSchema);
 passport.use(User.createStrategy());
 passport.serializeUser(function (user, cb) {
     process.nextTick(function () {
@@ -160,6 +167,7 @@ app.get('/auth/google/blog', passport.authenticate('google', {
 
 
 app.get("/login", (req, res) => {
+    // populateDb();
     if (req.isAuthenticated()) {
         // console.log(req.user)
         User.findById(req.user.id)
@@ -312,6 +320,13 @@ app.get("/createpost", (req, res) => {
         res.redirect("/login")
     }
 })
+
+app.get("/api/reviews", (req, res) => {
+    Review.find({})
+        .then((reviews) => {
+            res.json(reviews);
+        })
+})
 app.get("/logout", (req, res) => {
     req.logOut((err) => {
         if (err) {
@@ -328,13 +343,15 @@ app.listen(PORT, () => {
 })
 
 // function populateDb() {
-//     const baseUrl = "/posts/"
-//     Post.find({})
-//         .then((result) => {
-//             result.forEach((post) => {
-//                 post.url = baseUrl + post.id
-//                 post.save();
-//             })
-//         })
+//     let person = "Maya Patel"
+//     let comment = "As a journalist and writer, I find Sorosoke to be an invaluable resource for staying informed and up-to-date on the latest news and trends. The site's articles are consistently well-researched and thoughtfully written, and I appreciate the variety of topics covered. Sorosoke is a must-read for anyone who cares about social justice and progressive values."
+
+
+//     let chosenImage = "./public/Images/pexels-andrea-piacquadio-3781530.jpg"
+//     let reviewImage = fs.readFileSync(chosenImage, "base64")
+//     const review = new Review({
+//         person, comment, reviewImage
+//     })
+//     review.save();
 
 // }

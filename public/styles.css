@@ -58,12 +58,11 @@ gap: 50px;
 align-items: center;
 /* justify-content: center; */
 }
-.reg-login{
-    /* margin: 0; */
-}
+
 .create-post{
     background-color: #9E6F21;
     color: white;
+    /* padding: 0 15px; */
 }
 
 .logout{
@@ -76,7 +75,7 @@ align-items: center;
     flex-wrap: nowrap;
     align-self: flex-end;
     align-items: center;
-    justify-content: center;
+    /* justify-content: center; */
     /* gap: 20px */
     /* border: 2px solid black; */
     /* padding: 0 5px; */
@@ -123,10 +122,11 @@ align-items: center;
     justify-content: left; */
 }
 .newsletter{
-    width: 100%;
+    min-width: 100%;
     padding: 50px 30px;
     margin: 0 auto;
     text-align: center;
+    max-width: 100%
 }
 
 .newsletter .input-group{
@@ -151,9 +151,11 @@ align-items: center;
     gap: 30px;
 }
 #main-highlight, .other-highlights{
-    min-width: 46%;
+    min-width: 350px;
     width: 46%;
+    max-width: 100%;
     min-height: 100%
+    
 }
 #main-highlight-image{
 width: 100%;
@@ -221,8 +223,9 @@ overflow-y: hidden;
 .tag{
     border: 2px solid black;
     padding: 2px 5px;
-    min-width: 100px;
-    width: fit-content;
+    min-width: fit-content;
+    width: 100px;
+    /* width: 100px; */
     text-align: center;
     border-radius: 20px;
 }
@@ -314,11 +317,13 @@ footer{
 .subscribe{
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-between;
 }
 .subscribe .input-group{
     height: 20px;
-    width: 500px;
+    width: 400px;
+    min-width: fit-content;
 }
 .footer-items{
     display: flex;
@@ -346,4 +351,129 @@ footer{
 footer h5{
     text-align: center;
 }
+.other-highlights-header{
+    display: none;
+}
+@media (max-width: 300px) {
+    .newsletter h1{
+        font-size: 30px;
+    }
+    .newsletter .input-group {
+            min-width: 200px;
+            max-width: 500px;
+            margin: 0 auto;
+    
+    }
+    #main-highlight,
+    .other-highlights {
+        min-width: 200px;
+    }
+    .other-highlights{
+        min-height: fit-content;
+        max-height: 250px;
+        align-items:unset;
+    }
+}
+@media  (max-width: 1000px) {
+    
+    .navbar{
+        /* width: 100%; */
+        /* padding: 0; */
+        /* margin: 0; */
+        /* justify-content: space-between; */
+        position: sticky;
+        /* margin-top:30px ; */
+        min-height: max-content;
 
+        padding: 20px 0;
+        background-color: rgba(255, 255, 255,0.4);
+        backdrop-filter: blur(6px);
+    }
+    .navbar-nav{
+        gap:5px;
+        justify-content: center;
+    }
+    .profile-nav{
+        position: absolute;
+        top: 0;
+        /* display: block; */
+         right:0;
+        /* justify-content: center; */
+    }
+    .highlights-section{
+        padding:10px;
+        
+    }
+    .highlight-group{
+        flex-direction: column;
+        justify-content: center;
+        margin: 0;
+    }
+    #main-highlight,.other-highlights{
+        width: 100%;
+        /* border: 2px solid purple; */
+        /* position: static; */
+        }
+        .footer-items{
+            flex-direction: column;
+            justify-content: center;
+        }
+    .footer-items ul{
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 10px;
+        justify-content: center;
+        width: 100%;
+    }
+    .other-highlights .blog-details{
+    min-width: 100%;
+    min-height: max-content;
+    height: 300px;
+    border: 2px solid silver;
+    padding: 5px;
+    align-items: center;
+    }
+    .other-highlights .blog-details .blog-text{
+    width: 40%;
+    }
+    .other-highlights .blog-details .redirect{
+        position: relative;
+        text-align: center;
+        right: 0;
+    }
+    .other-highlights
+    {
+        flex-direction: row;
+        overflow-x: scroll;
+        /* flex-wrap: wrap; */
+    }
+    .other-highlights .blog-date {
+        /* background-color: black; */
+        /* opacity: 1; */
+        /* top: 0; */
+        text-align: center;
+        width: 100%;
+        display: block;
+    }
+
+    .other-highlights .blog-author {
+        float: none;
+        text-align: center;
+        display: block;
+        width: 100%;
+    }
+    .other-highlights .blog-details:hover .blog-date {
+        transform: translateY(-100%);
+    }
+    .navbar-toggler{
+        position: absolute;
+        top: 0;
+        left: 0;
+    }
+    .other-highlights-header {
+        display: block;
+    }
+    .create-post{
+        width: 150px;
+    }
+}

@@ -11,7 +11,7 @@ AOS.init({
 function setMainHighlight() {
     postController.fetchAllPosts()
         .then((result) => {
-            console.log(result)
+            // console.log(result)
             if (result.inSession) {
                 $('.get-started').css('display', 'none');
                 $('.logout').css('display', 'flex');

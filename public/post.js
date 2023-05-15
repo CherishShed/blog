@@ -14,13 +14,13 @@ postController.fetchPostById("api" + postUrl)
         }
         if (post.signedInUser) {
 
-            if (post.signedInUser.profilePic != "") {
+            if (post.signedInUser.profilePic != null) {
                 var profilePicture = post.signedInUser.profilePic;
-            } else if (post.signedInUser.googleProfilePic != "") {
+                $("#profile-pic").attr('src', "data:image/png;base64," + profilePicture)
+            } else if (post.signedInUser.googleProfilePic != null) {
                 var profilePicture = post.signedInUser.googleProfilePic;
+                $("#profile-pic").attr('src', profilePicture)
             }
-            console.log(profilePicture);
-            $("#profile-pic").attr('src', profilePicture)
             $("#profile-name").text(post.signedInUser.name);
 
         }
