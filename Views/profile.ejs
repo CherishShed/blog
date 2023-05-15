@@ -28,73 +28,22 @@
 
 <body>
     <!-- <hr class="divider"> -->
-    <nav class="navbar navbar-expand-lg">
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
-            <i class="fa-solid fa-bars"></i>
-        </button>
-        <!-- Navbar links -->
-        <div class="collapse navbar-collapse" id="collapsibleNavbar">
-            <ul class="navbar-nav">
-                <a class="navbar-brand" href="/">SóróSoke</a>
-
-                <li class="nav-item">
-                    <a class="nav-link" href="/">Home</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="/profile">My Posts</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Contact Us</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav reg-login">
-                <li class="nav-item" role="button"><a href="/login" class="nav-link btn btn-outline-success get-started"
-                        role="button">Login <i class="fa-solid fa-arrow-right-to-bracket fa-beat"></i></a>
-                </li>
-                <li class="nav-item" role="button"><a href="/createpost"
-                        class="nav-link btn btn-outline-dark create-post" role="button">create
-                        Post <i class="fa-solid fa-pen-to-square fa-shake"></i></a>
-                </li>
-                <!-- <li class="nav-item" role="button"><a href="/logout" class="nav-link btn btn-danger logout"
-                        role="button">Log out <i class="fa-solid fa-right-from-bracket"></i></a>
-                </li> -->
-
-            </ul>
-        </div>
-        <li class="nav-item profile-nav">
-
-
-            <div class="dropdown profile-dropdown">
-                <button type="button" class="btn dropdown-toggle" data-toggle="dropdown" id="dropdownMenuButton"
-                    aria-haspopup="true" aria-expanded="false">
-                </button>
-                <div class="dropdown-menu profile-options" aria-labelledby="dropdownMenuButton">
-                    <a class="dropdown-item my-profile" href="#">View Profile</a>
-                    <a class="dropdown-item" href="/logout">Log out</a>
-                </div>
+    <%- include('partials/nav.ejs') %>
+        <section class="profile intro">
+            <div class="profile-pic-name">
+                <img src=""" alt="" id=" profile-owner-pic">
+                <h5 id="profile-name"></h5>
             </div>
-            <div class="profile-info">
-                <p id="profile-name"></p>
-                <img src="" alt="" id="profile-pic">
+            <div class="profile-about-socials">
+                <p id="about"></p>
+                <div class="socials"></div>
             </div>
-        </li>
-    </nav>
+        </section>
 
-    <section class="profile intro">
-        <div class="profile-pic-name">
-            <img src="./Images/pexels-chevanon-photography-323503.jpg" alt="" id="profile-owner-pic">
-            <h5 id="profile-name"></h5>
-        </div>
-        <div class="profile-about-socials">
-            <p id="about"></p>
-            <div class="socials"></div>
-        </div>
-    </section>
+        <section class="pinned-posts"></section>
 
-    <section class="pinned-posts"></section>
-
-    <!-- <footer>
+        <!-- <footer>
         <form class="subscribe">
             <div>
                 <h3>Sign Up to our newsletter</h3>
@@ -125,25 +74,25 @@
         </div>
         <h5>&copy;2023 SóróSoke</h5>
     </footer> -->
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
-        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-        crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
-        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-        crossorigin="anonymous"></script>
-    <script>
-        AOS.init({
-            duration: 500,
-            easing: "ease-in-out",
-            once: true,
-            mirror: false,
-            delay: 0
-        });
-    </script>
-    <script src="/js/profile.js" type="module"></script>
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+        <script>
+            AOS.init({
+                duration: 500,
+                easing: "ease-in-out",
+                once: true,
+                mirror: false,
+                delay: 0
+            });
+        </script>
+        <script src="/js/profile.js" type="module"></script>
 </body>
 
 </html>

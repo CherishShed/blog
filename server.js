@@ -288,9 +288,15 @@ app.get("/profile/:id", (req, res) => {
 })
 app.get("/api/profile/:id", (req, res) => {
     const { id } = req.params
+    var signedInUser = false
+    var inSession = false
+    if (req.isAuthenticated) {
+        signedInUser = req.user
+        inSession = true
+    }
     User.findById(id).populate("posts")
         .then(user => {
-            res.json(user);
+            res.json({ user, signedInUser, inSession });
         })
 })
 app.post("/signup", (req, res) => {
