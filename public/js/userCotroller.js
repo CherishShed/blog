@@ -5,7 +5,7 @@ const userController = {
         return data;
 
     },
-    fetchPostById: async function (url) {
+    fetchUserProfile: async function (url) {
         const response = await fetch("http://localhost:8081/" + url);
         const data = await response.json();
         return data;
