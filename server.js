@@ -42,6 +42,8 @@ const userSchema = new mongoose.Schema({
     googleId: String,
     googleProfilePic: String,
     profilePic: String,
+    profileUrl: String,
+    socials: [String]
 })
 
 const postSchema = new mongoose.Schema({
@@ -257,7 +259,7 @@ app.post("/profiledetails", upload.single('profilePic'), (req, res) => {
     //         console.log("finding person...")
     //         console.log(foundUser);
     //     })
-    User.findByIdAndUpdate(req.user._id, { $set: { profilePic: profilePic, firstName: req.body.fname, lastName: req.body.lname, username: req.body.email, name: `${req.body.fname} ${req.body.lname}` } })
+    User.findByIdAndUpdate(req.user._id, { $set: { profilePic: profilePic, firstName: req.body.fname, lastName: req.body.lname, username: req.body.email, name: `${req.body.fname} ${req.body.lname}`, profileUrl: `profile/${req.user._id}` } })
         .then(() => {
             if (fs.existsSync(req.file.path)) {
                 fs.unlink(req.file.path, (err) => {
@@ -281,6 +283,16 @@ app.get("/api/getmyprofile", (req, res) => {
 
 })
 
+app.get("/profile/:id", (req, res) => {
+    res.render("profile");
+})
+app.get("/api/profile/:id", (req, res) => {
+    const { id } = req.params
+    User.findById(id).populate("posts")
+        .then(user => {
+            res.json(user);
+        })
+})
 app.post("/signup", (req, res) => {
     User.register({ username: req.body.username }, req.body.password, (err, foundUser) => {
         if (err) {

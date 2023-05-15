@@ -1,4 +1,4 @@
-import userController from "./userCotroller.js"
+import userController from "./js/userCotroller.js"
 
 
 var data = await userController.getMyProfile()

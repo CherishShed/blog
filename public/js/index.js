@@ -1,4 +1,4 @@
-import postController from "./postController.js";
+import postController from "./js/postController.js";
 
 AOS.init({
     duration: 500,

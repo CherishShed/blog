@@ -1,6 +1,7 @@
-import postController from "./postController.js";
+import postController from "./js/postController.js";
 var postUrl = window.location.pathname;
 console.log("api" + postUrl);
+console.log(window.location)
 
 postController.fetchPostById("api" + postUrl)
     .then((post) => {
@@ -31,6 +32,8 @@ postController.fetchPostById("api" + postUrl)
         $("#open-post-title").text(openPost.title);
         $("#open-post-description").text(openPost.description);
         $("#open-post-author").text(openPost.author.name);
+        $("#open-post-author").attr("href", "/" + post.author.profileUrl);
+        console.log(post.author.profileUrl)
         $("#open-post-content ").text(openPost.content);
 
         //other posts by author
@@ -46,7 +49,7 @@ postController.fetchPostById("api" + postUrl)
             var profilePicture = post.author.googleProfilePic;
             $("#author-pic").attr('src', profilePicture)
         }
-        $("#profile-name").text(post.signedInUser.name);
+        $("#profile-name").text(post.signedInUser.firstName);
         console.log(authorOtherPosts);
         authorOtherPosts.forEach((post) => {
             let blogDetails = $("<div></div>");
