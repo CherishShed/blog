@@ -108,7 +108,7 @@ h5 {
     border-color: transparent;
 }
 
-#profile-pic {
+.profile-pic {
     border-radius: 10px;
     max-height: 50px;
     max-width: 50px;
@@ -152,7 +152,17 @@ h5 {
     width: 55%;
     position: relative;
 }
+#open-post-author{
+    color: white;
+    font-weight: bold;
+}
 
+#open-post-author:hover{
+    color: black;
+}
+#author-pic{
+    border: none;
+}
 .post-hero-image img {
     height: 100%;
     width: 100%;

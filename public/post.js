@@ -39,6 +39,14 @@ postController.fetchPostById("api" + postUrl)
         } else {
             var authorOtherPosts = post.author.posts
         }
+        if (post.author.profilePic != null) {
+            var profilePicture = post.author.profilePic;
+            $("#author-pic").attr('src', "data:image/png;base64," + profilePicture)
+        } else if (post.author.googleProfilePic != null) {
+            var profilePicture = post.author.googleProfilePic;
+            $("#author-pic").attr('src', profilePicture)
+        }
+        $("#profile-name").text(post.signedInUser.name);
         console.log(authorOtherPosts);
         authorOtherPosts.forEach((post) => {
             let blogDetails = $("<div></div>");
