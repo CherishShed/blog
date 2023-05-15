@@ -1,4 +1,4 @@
-import postController from "./js/postController.js";
+import postController from "./postController.js";
 
 const reviews = await postController.fetchReviews();
 // console.log(reviews);

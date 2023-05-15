@@ -1,4 +1,4 @@
-import postController from "./js/postController.js";
+import postController from "./postController.js";
 var postUrl = window.location.pathname;
 console.log("api" + postUrl);
 console.log(window.location)
