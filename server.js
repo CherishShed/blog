@@ -43,7 +43,8 @@ const userSchema = new mongoose.Schema({
     googleProfilePic: String,
     profilePic: String,
     profileUrl: String,
-    socials: [String]
+    socials: { linkedin: String, facebook: String, twitter: String, instagram: String },
+    about: String
 })
 
 const postSchema = new mongoose.Schema({
