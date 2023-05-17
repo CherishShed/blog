@@ -265,7 +265,14 @@ h5 {
     gap: 20px;
     position: relative;
     justify-content: space-around;
+    min-height: 40%;
 
+}
+.no-value{
+    text-align: center;
+    font-size: 50px;
+    color: var(--text);
+    font-family: cursive;
 }
 .blog-details{
     min-width: 250px;

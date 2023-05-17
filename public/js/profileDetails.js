@@ -2,6 +2,7 @@ import userController from "./userCotroller.js"
 
 
 var data = await userController.getMyProfile()
+console.log(data);
 function fillPresentDetails(data) {
     console.log(data)
     if (data.firstName != "" && data.firstName != null) {

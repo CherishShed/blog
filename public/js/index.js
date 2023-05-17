@@ -34,6 +34,7 @@ function setMainHighlight() {
 
                 // console.log(result.signedInUser);
                 $("#profile-name").text(result.signedInUser.firstName);
+                $(".myProfile").attr("href", "/" + result.signedInUser.profileUrl)
 
 
             }

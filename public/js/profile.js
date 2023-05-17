@@ -8,7 +8,7 @@ if (profile.inSession) {
     $('.logout').css('display', 'flex');
 } else {
 
-    $('.get-in').css('display', 'block');
+    $('.get-started').css('display', 'block');
     $('.profile-nav').css('display', 'none');
 
 }
@@ -45,6 +45,7 @@ function profileData(profile) {
         }
     }
     profile.posts.forEach((post) => {
+        $(".no-value").css("display", "none");
         let blogDetails = $("<div></div>");
         $(blogDetails).addClass("blog-details")
         let blogImage = $("<div></div>");

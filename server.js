@@ -102,7 +102,12 @@ passport.use(new GoogleStrategy({
         //     })
         User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, name: profile.displayName, googleProfilePic: profile._json.picture, firstName: profile.name.givenName, lastName: profile.name.familyName }, function (err, user) {
             return cb(err, user);
+
         });
+        const previousUrl = req.session.previousUrl || '/'; // Default to homepage if no previous URL is stored
+
+        // Redirect back to the previous URL
+        res.redirect(previousUrl);
     }
 ));
 
@@ -161,8 +166,13 @@ app.get("/api/getallPosts", (req, res) => {
 
 })
 
-app.get("/auth/google", passport.authenticate("google", { scope: ["profile", "email"] })
-);
+app.get('/auth/google', (req, res, next) => {
+    // Store the previous URL in the session
+    req.session.previousUrl = req.headers.referer || '/'; // Default to homepage if no referer URL is available
+
+    // Redirect to Google OAuth flow
+    passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
+});
 app.get('/auth/google/blog', passport.authenticate('google', {
     successRedirect: '/',
     failureRedirect: '/login'
@@ -171,14 +181,17 @@ app.get('/auth/google/blog', passport.authenticate('google', {
 
 app.get("/login", (req, res) => {
     // populateDb();
+    req.session.previousUrl = req.headers.referer || '/';
+    const previousUrl = req.session.previousUrl;
+    console.log(previousUrl)
     if (req.isAuthenticated()) {
         // console.log(req.user)
         User.findById(req.user.id)
             .then((user) => {
-                if (user.firstName === "" || user.lastName === "" || (user.profilePic != "" || user.googleProfilePic != "")) {
+                if (user.firstName === null || user.lastName === null || (user.profilePic != null && user.googleProfilePic != null)) {
                     res.redirect("/profiledetails");
                 } else {
-                    res.redirect("/")
+                    res.redirect(req.session.previousUrl)
                 }
                 // console.log(user);
             })
@@ -316,19 +329,19 @@ app.post("/signup", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-    res.write
     const user = new User({
         username: req.body.username,
         password: req.body.password
     });
+    const previousUrl = req.session.previousUrl || "/profiledetails"
     req.logIn(user, (err) => {
         if (err) {
             console.log(err);
             res.redirect("/login")
         } else {
             passport.authenticate("local")(req, res, () => {
-                // console.log(req.user)
-                res.redirect("/profiledetails");
+                console.log(previousUrl)
+                res.redirect(previousUrl);
             })
         }
     })
