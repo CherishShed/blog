@@ -227,6 +227,10 @@ overflow-y: hidden;
 }
 .blog-author{
     float: right;
+    color: white;
+}
+.blog-author:hover{
+    color: black;
 }
 
 #main-highlight-date{

@@ -139,7 +139,7 @@ app.get("/api/getallPosts", (req, res) => {
     }
     var signedInUser = false
 
-    Post.find({}).populate('author', 'name')
+    Post.find({}).populate('author', 'name profileUrl')
         .then((data) => {
             // console.log(user);
             // data.forEach((post) => {

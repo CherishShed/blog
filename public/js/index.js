@@ -38,6 +38,7 @@ function setMainHighlight() {
 
             }
             let mainBlog = result.data[0];
+            console.log(mainBlog)
             $("#main-highlight-image img").attr('src', "data:image/png;base64," + mainBlog.coverImage);
             let viewMore = $("<a></a>").text("Read More ");
             $(viewMore).addClass("redirect");
@@ -48,6 +49,7 @@ function setMainHighlight() {
             $("#main-highlight-details").append(viewMore);
             $("#main-highlight-date").text(new Date(mainBlog.createdAt).toDateString());
             $("#main-highlight-blog-author").text(mainBlog.author.name);
+            $("#main-highlight-blog-author").attr("href", mainBlog.author.profileUrl);
             $("#main-highlight-title").text(mainBlog.title);
             $("#main-highlight-description").text(mainBlog.description);
             mainBlog.tags.forEach((tag) => {
@@ -64,6 +66,7 @@ function otherHighlights() {
         .then((result) => {
 
             result.data.slice(1, 4).forEach((post) => {
+                console.log(post);
                 let blogDetails = $("<div></div>");
                 $(blogDetails).addClass("blog-details")
                 let blogImage = $("<div></div>");
@@ -75,8 +78,9 @@ function otherHighlights() {
                 let blogOwnerDets = $("<p></p>");
                 let blogDate = $("<span></span>").text(new Date(post.createdAt).toDateString());
                 $(blogOwnerDets).addClass("blog-date");
-                let blogAuthor = $("<span></span>").text(post.author.name);
+                let blogAuthor = $("<a></a>").text(post.author.name);
                 $(blogAuthor).addClass("blog-author");
+                $(blogAuthor).attr("href", post.author.profileUrl);
                 $(blogOwnerDets).append(blogDate, blogAuthor);
                 $(blogImage).append(overlay, blogImageImg, blogOwnerDets);
 
@@ -123,7 +127,7 @@ function otherHighlights() {
 
 setTimeout(function () {
     $(".preloader").css("display", "none");
-}, 3000)
+}, 2000)
 window.onload = function () {
     setMainHighlight();
     otherHighlights();

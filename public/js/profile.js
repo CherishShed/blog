@@ -108,5 +108,5 @@ function profileData(profile) {
 
 setTimeout(function () {
     $(".preloader").css("display", "none");
-}, 5000)
+}, 2000)
 profileData(profile.user);
