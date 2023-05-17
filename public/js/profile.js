@@ -26,6 +26,7 @@ if (profile.signedInUser) {
 }
 function profileData(profile) {
     console.log(profile);
+    document.title = profile.name;
     $("#profile-owner-pic").attr('src', "data:image/png;base64," + profile.profilePic);
     $("#profile-owner-name").text(profile.name);
     $("#about").text(profile.about);

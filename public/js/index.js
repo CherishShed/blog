@@ -57,14 +57,8 @@ function setMainHighlight() {
                 $(tagDets).addClass("tag btn btn-outline-dark")
                 $("#main-highlight-tags").append(tagDets);
             })
-        })
-}
 
-function otherHighlights() {
-    // console.log(result)
-    postController.fetchAllPosts()
-        .then((result) => {
-
+            //other Highlights creation
             result.data.slice(1, 4).forEach((post) => {
                 console.log(post);
                 let blogDetails = $("<div></div>");
@@ -121,14 +115,23 @@ function otherHighlights() {
                     }
                 }
             })
-
         })
 }
+
+// function otherHighlights() {
+//     // console.log(result)
+//     postController.fetchAllPosts()
+//         .then((result) => {
+
+
+
+//         })
+// }
 
 setTimeout(function () {
     $(".preloader").css("display", "none");
 }, 2000)
 window.onload = function () {
     setMainHighlight();
-    otherHighlights();
+    // otherHighlights();
 };

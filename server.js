@@ -217,7 +217,7 @@ app.get("/api/posts/:id", (req, res) => {
         signedInUser = req.user;
     }
     // console.log(signedInUser)
-    Post.findById(id).populate("author", "name")
+    Post.findById(id).populate("author", "name profileUrl")
         .then((data) => {
             // console.log(data)
             // console.log(user);

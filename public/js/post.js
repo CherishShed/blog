@@ -63,9 +63,10 @@ postController.fetchPostById("api" + postUrl)
             let blogOwnerDets = $("<p></p>");
             let blogDate = $("<span></span>").text(new Date(post.createdAt).toDateString());
             $(blogOwnerDets).addClass("blog-date");
-            let blogAuthor = $("<span></span>").text(openPost.author.name);
-            console.log(post.author.name)
+            let blogAuthor = $("<a></a>").text(openPost.author.name);
             $(blogAuthor).addClass("blog-author");
+            $(blogAuthor).attr("href", openPost.author.profileUrl);
+
             $(blogOwnerDets).append(blogDate, blogAuthor);
             $(blogImage).append(overlay, blogImageImg, blogOwnerDets);
 
