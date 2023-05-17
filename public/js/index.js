@@ -13,10 +13,12 @@ function setMainHighlight() {
         .then((result) => {
             // console.log(result)
             if (result.inSession) {
-                $('.get-started').css('display', 'none');
                 $('.logout').css('display', 'flex');
             } else {
+
+                $('.get-started').css('display', 'block');
                 $('.profile-nav').css('display', 'none');
+
             }
             if (result.signedInUser) {
                 console.log(result.signedInUser);
@@ -102,12 +104,26 @@ function otherHighlights() {
                 $(blogDetails).append(blogImage, blogText);
 
                 $(".other-highlights").append(blogDetails);
+                const longText = $(blogDescription);
+                const maxHeight = 80; // Adjust this value to match the desired height
+                console.log(longText.outerHeight())
 
+
+                if (longText.outerHeight() > maxHeight) {
+                    console.log("greater than max height")
+                    while (longText.outerHeight() > maxHeight) {
+                        console.log("still here")
+                        longText.text(longText.text().replace(/\W*\s(\S)*$/, '...'));
+                    }
+                }
             })
 
         })
 }
 
+setTimeout(function () {
+    $(".preloader").css("display", "none");
+}, 3000)
 window.onload = function () {
     setMainHighlight();
     otherHighlights();

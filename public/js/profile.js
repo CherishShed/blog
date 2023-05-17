@@ -3,12 +3,12 @@ var profileUrl = window.location.pathname;
 console.log("api" + profileUrl);
 
 const profile = await userController.fetchUserProfile("api" + profileUrl);
-// console.log(profile);
+console.log(profile);
 if (profile.inSession) {
     $('.logout').css('display', 'flex');
 } else {
 
-    $('.get-started').css('display', 'flex');
+    $('.get-in').css('display', 'block');
     $('.profile-nav').css('display', 'none');
 
 }
@@ -40,6 +40,7 @@ function profileData(profile) {
             $(socialLink).attr("target", "blank");
             $(".socials").append(socialLink);
 
+            $(".title").text(profile.name);
         }
     }
     profile.posts.forEach((post) => {
@@ -105,4 +106,7 @@ function profileData(profile) {
     })
 }
 
+setTimeout(function () {
+    $(".preloader").css("display", "none");
+}, 5000)
 profileData(profile.user);

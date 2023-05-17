@@ -291,7 +291,8 @@ app.get("/api/profile/:id", (req, res) => {
     const { id } = req.params
     var signedInUser = false
     var inSession = false
-    if (req.isAuthenticated) {
+    if (req.isAuthenticated()) {
+        // console.log()
         signedInUser = req.user
         inSession = true
     }

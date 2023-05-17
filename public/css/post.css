@@ -25,7 +25,24 @@ h4,
 h5 {
     color: white;
 }
+.preloader {
+    position: absolute;
+    top: 0;
+    z-index: 20;
+    width: 100%;
+    min-height: 100%;
+    background-color: white;
+    animation-name: load;
+    animation-duration: 8s;
+    animation-iteration-count: infinite;
 
+}
+
+@keyframes load {
+    100% {
+        background-color:white;
+    }
+}
 .navbar-brand {
     color: white;
     font-weight: 500;
@@ -63,7 +80,7 @@ h5 {
     background-color: rgba(10, 77, 104, 0.3);
     color: white;
     text-align: center;
-        /* min-width: 100px; */
+        min-width: 100px;
     display: none;
     border: none;
     
@@ -290,7 +307,7 @@ height: 400px;
         display: block;
     }
 
-    .create-post {
+    .create-post,.get-started {
         width: 150px;
     }
 }

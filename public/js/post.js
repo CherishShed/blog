@@ -9,7 +9,7 @@ postController.fetchPostById("api" + postUrl)
             $('.logout').css('display', 'flex');
         } else {
 
-            $('.get-started').css('display', 'flex');
+            $('.get-started').css('display', 'block');
             $('.profile-nav').css('display', 'none');
 
         }
@@ -114,6 +114,9 @@ postController.fetchPostById("api" + postUrl)
         })
     });
 
+setTimeout(function () {
+    $(".preloader").css("display", "none");
+}, 3000)
 // postController.fetchAllPosts()
 //     .then((result) => {
 //         // console.log(result)
