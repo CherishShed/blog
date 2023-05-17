@@ -23,6 +23,7 @@ postController.fetchPostById("api" + postUrl)
                 $("#profile-pic").attr('src', profilePicture)
             }
             $("#profile-name").text(post.signedInUser.name);
+            $(".myProfile").attr("href", post.signedInUser.profileUrl)
 
         }
         console.log("we are here");
@@ -65,7 +66,7 @@ postController.fetchPostById("api" + postUrl)
             $(blogOwnerDets).addClass("blog-date");
             let blogAuthor = $("<a></a>").text(openPost.author.name);
             $(blogAuthor).addClass("blog-author");
-            $(blogAuthor).attr("href", openPost.author.profileUrl);
+            $(blogAuthor).attr("href", "/" + openPost.author.profileUrl);
 
             $(blogOwnerDets).append(blogDate, blogAuthor);
             $(blogImage).append(overlay, blogImageImg, blogOwnerDets);
