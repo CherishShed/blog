@@ -28,6 +28,7 @@ function setMainHighlight() {
                     $("#profile-pic").attr('src', "data:image/png;base64," + profilePicture)
                 }
                 else if (result.signedInUser.googleProfilePic != null) {
+                    console.log("Google profile")
                     var profilePicture = result.signedInUser.googleProfilePic;
                     $("#profile-pic").attr('src', profilePicture)
                 }

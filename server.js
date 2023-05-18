@@ -96,13 +96,8 @@ passport.use(new GoogleStrategy({
 },
     function (accessToken, refreshToken, profile, cb) {
         // console.log(profile)
-        // User.findOne({ username: profile.emails[0] })
-        //     .then((err, foundUser) => {
-        //         if (foundUser) {
-        //             return (cb(err, foundUser))
-        //         }
-        //     })
-        User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, name: profile.displayName, googleProfilePic: profile._json.picture, firstName: profile.name.givenName, lastName: profile.name.familyName }, function (err, user) {
+
+        User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, googleProfilePic: profile._json.picture, firstName: profile.name.givenName, lastName: profile.name.familyName }, function (err, user) {
             return cb(err, user);
 
         });
@@ -153,7 +148,7 @@ app.get("/api/getallPosts", (req, res) => {
 
                 User.findById(req.user._id)
                     .then((user) => {
-                        console.log(user.name);
+                        console.log(user);
                         signedInUser = user;
                         res.json({ data, inSession, signedInUser });
                     })
@@ -214,14 +209,14 @@ app.get("/posts/:id", (req, res) => {
             res.render('blog', { title: data.title });
         })
 })
-app.get("/api/posts/:id", (req, res) => {
+app.get("/api/posts/:id", async (req, res) => {
     console.log("we ae here now")
     const { id } = req.params
     var inSession = false
     var signedInUser = false
     if (req.isAuthenticated()) {
         inSession = true
-        signedInUser = req.user;
+        signedInUser = await User.findById(req.user._id);
     }
     // console.log(signedInUser)
     Post.findById(id).populate("author", "name profileUrl")
