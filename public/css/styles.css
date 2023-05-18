@@ -325,14 +325,12 @@ overflow-y: hidden;
     height: 40%;
     position: relative;
 }
-.redirect{
-position: absolute;
-top: 0;
-right: 20px;
-color: black;
-/* font-size: 20px; */
+.blog-title{
+    color: var(--text)
 }
-.redirect:hover{
+
+.blog-title:hover {
+    color:#0A4D68;
     text-decoration: none;
 }
 .blog-details:hover .overlay{

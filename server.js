@@ -68,11 +68,13 @@ const reviewSchema = new mongoose.Schema({
 
 
 
-userSchema.plugin(passportLocalMongoose);
-userSchema.plugin(findOrCreate);
+
 userSchema.virtual('name').get(function () {
     return this.firstName + ' ' + this.lastName;
 });
+userSchema.set("toJSON", { virtuals: true });
+userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(findOrCreate);
 const User = mongoose.model("user", userSchema);
 const Post = mongoose.model("blogPost", postSchema);
 const Review = mongoose.model("review", reviewSchema);
@@ -137,15 +139,11 @@ app.get("/api/getallPosts", (req, res) => {
     }
     var signedInUser = false
 
-    Post.find({}).populate('author', 'name profileUrl')
+    Post.find({})
+        .populate('author', 'firstName lastName profileUrl')
         .then((data) => {
-            // console.log(user);
-            // data.forEach((post) => {
-            //     post.coverImage.data = post.coverImage.data.toString('base64');
-            // })
             if (req.isAuthenticated()) {
                 inSession = true
-
                 User.findById(req.user._id)
                     .then((user) => {
                         console.log(user);
@@ -200,7 +198,7 @@ app.get("/signup", (req, res) => {
 
 app.get("/posts/:id", (req, res) => {
     const { id } = req.params
-    Post.findById(id).populate('author', 'name')
+    Post.findById(id).populate('author', 'firstName lastName profileUrl')
         .then((data) => {
             // console.log(data);
             // data.forEach((post) => {
@@ -219,7 +217,7 @@ app.get("/api/posts/:id", async (req, res) => {
         signedInUser = await User.findById(req.user._id);
     }
     // console.log(signedInUser)
-    Post.findById(id).populate("author", "name profileUrl")
+    Post.findById(id).populate("author", "firstName  lastName profileUrl")
         .then((data) => {
             // console.log(data)
             // console.log(user);

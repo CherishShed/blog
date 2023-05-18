@@ -74,8 +74,9 @@ postController.fetchPostById("api" + postUrl)
 
             let blogText = $("<div></div>");
             $(blogText).addClass("blog-text");
-            let blogTitle = $("<h5></h5>").text(post.title);
+            let blogTitle = $("<a></a>").text(post.title);
             $(blogTitle).addClass("blog-title");
+            $(blogTitle).attr("href", post.url)
             let blogDescriptionContainer = $("<div></div>");
             $(blogDescriptionContainer).addClass("blog-description-container");
             let blogDescription = $("<p></p>").text(post.description);
@@ -88,13 +89,8 @@ postController.fetchPostById("api" + postUrl)
                 $(tagDets).addClass("tag btn btn-outline-dark")
                 $(blogTags).append(tagDets);
             })
-            let viewMore = $("<a></a>").text("Read More ");
-            $(viewMore).addClass("redirect");
-            $(viewMore).attr("href", post.url);
-            let viewIcon = $("<i></i>");
-            $(viewIcon).addClass("fa-solid fa-arrow-right");
-            $(viewMore).append(viewIcon);
-            $(blogText).append(blogTitle, blogDescriptionContainer, blogTags, viewMore);
+
+            $(blogText).append(blogTitle, blogDescriptionContainer, blogTags);
             $(blogDetails).append(blogImage, blogText);
 
             $(".more-posts").append(blogDetails);
