@@ -73,7 +73,8 @@ function profileData(profile) {
 
         let blogText = $("<div></div>");
         $(blogText).addClass("blog-text");
-        let blogTitle = $("<h5></h5>").text(post.title);
+        let blogTitle = $("<a></a>").text(post.title);
+        $(blogTitle).attr("href", post.url);
         $(blogTitle).addClass("blog-title");
         let blogDescriptionContainer = $("<div></div>");
         $(blogDescriptionContainer).addClass("blog-description-container");
@@ -87,13 +88,8 @@ function profileData(profile) {
             $(tagDets).addClass("tag btn btn-outline-dark")
             $(blogTags).append(tagDets);
         })
-        let viewMore = $("<a></a>").text("Read More ");
-        $(viewMore).addClass("redirect");
-        $(viewMore).attr("href", post.url);
-        let viewIcon = $("<i></i>");
-        $(viewIcon).addClass("fa-solid fa-arrow-right");
-        $(viewMore).append(viewIcon);
-        $(blogText).append(blogTitle, blogDescriptionContainer, blogTags, viewMore);
+
+        $(blogText).append(blogTitle, blogDescriptionContainer, blogTags);
         $(blogDetails).append(blogImage, blogText);
 
         $(".user-posts").append(blogDetails);
@@ -199,7 +195,7 @@ $("#editForm").submit(function (event) {
                 $('.toast').toast({ delay: 3000 });
                 $(".toast").css("background-color", "green")
                 $('.toast').toast('show');
-                $('.toast').on('hidden.bs.toast', function () {
+                $('.toast').on('hide.bs.toast', function () {
                     location.reload();
                 });
             } else {
@@ -210,7 +206,7 @@ $("#editForm").submit(function (event) {
                 $(".toast-text").text("An eror occured")
                 $(".toast").css("background-color", "red")
                 $('.toast').toast('show');
-                $('.toast').on('hidden.bs.toast', function () {
+                $('.toast').on('hide.bs.toast', function () {
                     location.reload();
                 });
             }

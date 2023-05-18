@@ -376,7 +376,8 @@ footer{
 .footer-items ul{
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    gap: 10px;
+    justify-content: flex-end;
 }
 .footer-items li{
     list-style: none;

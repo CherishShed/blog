@@ -18,6 +18,11 @@ const postController = {
         const response = await fetch("http://localhost:8081/api/reviews");
         const data = await response.json();
         return data;
+    },
+    fetchRecentPosts: async function () {
+        const response = await fetch("http://localhost:8081/api/recentposts");
+        const data = await response.json();
+        return data;
     }
 }
 
