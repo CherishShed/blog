@@ -22,7 +22,7 @@ postController.fetchPostById("api" + postUrl)
                 var profilePicture = post.signedInUser.googleProfilePic;
                 $("#profile-pic").attr('src', profilePicture)
             }
-            $("#profile-name").text(post.signedInUser.name);
+            $("#profile-name").text(post.signedInUser.firstName);
             $(".myProfile").attr("href", post.signedInUser.profileUrl)
 
         }

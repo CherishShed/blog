@@ -32,7 +32,6 @@ mongoose.connect("mongodb://127.0.0.1:27017/blogDB");
 const userSchema = new mongoose.Schema({
     username: String,
     password: String,
-    name: String,
     firstName: String,
     lastName: String,
     posts: [{
@@ -71,6 +70,9 @@ const reviewSchema = new mongoose.Schema({
 
 userSchema.plugin(passportLocalMongoose);
 userSchema.plugin(findOrCreate);
+userSchema.virtual('name').get(function () {
+    return this.firstName + ' ' + this.lastName;
+});
 const User = mongoose.model("user", userSchema);
 const Post = mongoose.model("blogPost", postSchema);
 const Review = mongoose.model("review", reviewSchema);
@@ -151,7 +153,7 @@ app.get("/api/getallPosts", (req, res) => {
 
                 User.findById(req.user._id)
                     .then((user) => {
-                        // console.log(user);
+                        console.log(user.name);
                         signedInUser = user;
                         res.json({ data, inSession, signedInUser });
                     })
@@ -249,22 +251,13 @@ app.post("/profiledetails", upload.single('profilePic'), (req, res) => {
 
     // if(req.file)
     if (req.file) {
-        // console.log(req.file.path);
         var profilePic = fs.readFileSync(req.file.path);
     } else {
-        // console.log("at all");
         var profilePic = fs.readFileSync("./public/Images/avatar.png");
-        // console.log(profilePic);
 
     }
+
     profilePic = profilePic.toString("base64");
-    // console.log("geting id")
-    // console.log(req.user._id);
-    // User.findById(req.user._id)
-    //     .then((foundUser) => {
-    //         console.log("finding person...")
-    //         console.log(foundUser);
-    //     })
     User.findByIdAndUpdate(req.user._id, { $set: { profilePic: profilePic, firstName: req.body.fname, lastName: req.body.lname, username: req.body.email, name: `${req.body.fname} ${req.body.lname}`, profileUrl: `profile/${req.user._id}` } })
         .then(() => {
             if (fs.existsSync(req.file.path)) {
@@ -277,10 +270,51 @@ app.post("/profiledetails", upload.single('profilePic'), (req, res) => {
 
 })
 
+app.post("/editprofiledetails", upload.single('profilePic'), async (req, res) => {
+    console.log("i am trying to update")
 
-app.get("/api/getmyprofile", (req, res) => {
+    // if(req.file)
     if (req.isAuthenticated()) {
-        // console.log(req.user);
+        const user = await User.findById(req.user._id);
+        const formData = req.body;
+        if (req.file) {
+            user.profilePic = fs.readFileSync(req.file, 'base64');
+        }
+        if (formData.fname) {
+            user.firstName = formData.fname;
+        }
+        if (formData.lname) {
+            user.firstName = formData.fname;
+        }
+        if (formData.about) {
+            user.about = formData.about;
+        }
+        var socials = ["linkedin", "twitter", "facebook", "instagram"]
+        socials.forEach((media) => {
+            if (formData[media]) {
+                user.socials[media] = formData[media];
+            }
+        })
+
+        user.save()
+            .then((result) => {
+                console.log("it is done")
+                console.log(result)
+                res.json({ status: true })
+            })
+            .catch((error) => {
+                res.json({ status: false })
+            })
+
+    } else {
+        res.redirect("/login")
+    }
+})
+
+
+app.get("/api/getmyprofile", async (req, res) => {
+    if (req.isAuthenticated()) {
+        console.log("here");
         res.json(req.user);
 
     } else {
@@ -292,13 +326,13 @@ app.get("/api/getmyprofile", (req, res) => {
 app.get("/profile/:id", (req, res) => {
     res.render("profile");
 })
-app.get("/api/profile/:id", (req, res) => {
+app.get("/api/profile/:id", async (req, res) => {
     const { id } = req.params
     var signedInUser = false
     var inSession = false
     if (req.isAuthenticated()) {
-        // console.log()
-        signedInUser = req.user
+        signedInUser = await User.findById(req.user._id);
+        console.log(signedInUser.name)
         inSession = true
     }
     User.findById(id).populate("posts")
