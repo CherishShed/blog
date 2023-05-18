@@ -24,8 +24,9 @@ body{
     min-height: 100%;
     background-color: white;
     animation-name: load;
-    animation-duration: 8s;
+    animation-duration: 7s;
     animation-iteration-count: infinite;
+    animation-timing-function: ease-in-out;
 
 }
 
@@ -34,10 +35,11 @@ body{
         background-color: #83764F;
     }
     40%{
-        background-color: #F97B22;
+        background-color: #0A4D68;
+        
     }
     70%{
-        background-color: #0A4D68;
+        background-color: #F97B22;
     }
     100%{
         background-image: var(--grad);

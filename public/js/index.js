@@ -189,8 +189,8 @@ async function recentPosts() {
 // }
 
 setTimeout(function () {
-    $(".preloader").css("display", "none");
-}, 2000)
+    $(".preloader").fadeOut(300);
+}, 4000)
 
 window.onload = function () {
     setMainHighlight();

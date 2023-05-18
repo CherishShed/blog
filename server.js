@@ -320,7 +320,8 @@ app.get("/api/getmyprofile", async (req, res) => {
 app.get("/api/recentposts", async (req, res) => {
     let posts = await Post.find({}).populate("author", "firstName lastName profileUrl").sort({ createdAt: 'desc' });
     // console.log(posts);
-    res.json(posts);
+    const shownRecentPosts = posts.slice(0, 7);
+    res.json(shownRecentPosts);
 
 })
 app.get("/profile/:id", (req, res) => {

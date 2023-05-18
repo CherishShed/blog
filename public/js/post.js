@@ -113,7 +113,7 @@ postController.fetchPostById("api" + postUrl)
     });
 
 setTimeout(function () {
-    $(".preloader").css("display", "none");
+    $(".preloader").fadeOut(300);
 }, 3000)
 // postController.fetchAllPosts()
 //     .then((result) => {
