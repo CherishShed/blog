@@ -60,8 +60,14 @@
                                         onclick="document.getElementById('picfileInput').click()">Change
                                         Picture <i class="fa-solid fa-file-arrow-up"></i></span>
                                 </div>
-                                <label for="">Name<input type="text" name="fname" placeholder="First Name" id="fname">
-                                    <input type="text" name="lname" placeholder="Last Name" id="lname"></label>
+                                <label for="">Name
+                                    <div class="name-input-container">
+                                        <input type="text" name="fname" placeholder="First Name" id="fname"
+                                            class="name-input">
+                                        <input type="text" name="lname" placeholder="Last Name" id="lname"
+                                            class="name-input">
+                                    </div>
+                                </label>
                                 <label for="emailaddress">Email
                                     <input type="email" name="email" id="emailaddress" placeholder="Email" disabled>
                                 </label>
@@ -72,14 +78,16 @@
                                 </label>
                                 <label>Social Media <span class="social-info">(paste the link to the corresponding
                                         social media profile)</span>
-                                    <input type="text" name="linkedin"
-                                        placeholder="https://www.linkedin.com/in/{username}" id="linkedin">
-                                    <input type="text" name="twitter" placeholder="https://twitter.com/{username}"
-                                        id="twitter">
-                                    <input type="text" name="facebook" placeholder="https://www.facebook.com/{username}"
-                                        id="facebook">
-                                    <input type="text" name="instagram"
-                                        placeholder="https://www.instagram.com/{username}" id="instagram">
+                                    <div class="social-input">
+                                        <input type="text" name="linkedin"
+                                            placeholder="https://www.linkedin.com/in/{username}" id="linkedin">
+                                        <input type="text" name="twitter" placeholder="https://twitter.com/{username}"
+                                            id="twitter">
+                                        <input type="text" name="facebook"
+                                            placeholder="https://www.facebook.com/{username}" id="facebook">
+                                        <input type="text" name="instagram"
+                                            placeholder="https://www.instagram.com/{username}" id="instagram">
+                                    </div>
                                 </label>
                             </form>
                         </div>

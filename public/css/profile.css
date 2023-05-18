@@ -318,13 +318,13 @@ h5 {
     overflow: hidden;
     min-width: 250px;
     max-width: 100%;
-    width: 400px;
+    width: 500px;
 }
 .modal-body{
     overflow-y: scroll;
     min-width: 250px;
     max-width: 100%;
-    width: 400px;
+    width: 500px;
     max-height: 400px;
 }
 #editForm {
@@ -359,9 +359,9 @@ h5 {
     width: 100%
 }
 
-#editForm input,textarea {
+#editForm input:not(.name-input),#editForm textarea {
     padding: 5px;
-    min-width: 150px;
+    min-width: 100%;
     width: 300px
 }
 
@@ -374,6 +374,24 @@ h5 {
     display: block;
     margin: 0 auto
 }
+.social-input{
+    display: flex;
+    flex-direction: column;
+    gap:10px;
+}
+.name-input-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+.name-input{
+    min-width: 130px;
+    width: 48%;
+    max-width: 100%;
+}
 .toast{
     position: absolute;
     z-index: 5;
@@ -385,6 +403,11 @@ h5 {
     align-items: center;
     min-height: 50px;
     /* display: non; */
+}
+.toast-text{
+    color: white;
+    color: bold;
+    font-size: 20px;
 }
 
 @media (max-width:800px) {

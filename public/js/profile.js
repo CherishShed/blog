@@ -22,16 +22,18 @@ if (Profile.signedInUser) {
         $("#profile-pic").attr('src', profilePicture)
     }
     $("#profile-name").text(Profile.signedInUser.firstName);
+    console.log(Profile.signedInUser.name)
 
 
 }
 function profileData(profile) {
     console.log(profile);
+
     if (Profile.signedInUser._id === profile._id) {
         console.log("it is")
         $(".edit").css("display", "block");
     }
-    document.title = profile.name;
+    document.title = `${profile.firstName} ${profile.lastName}`;
     $("#profile-owner-pic").attr('src', "data:image/png;base64," + profile.profilePic);
     $("#profile-owner-name").text(profile.name);
     $("#about").text(profile.about);
@@ -136,16 +138,16 @@ function fillPresentDetails(data) {
     if ((data.profilePic) != null) {
         console.log(typeof (data.profilePic));
         $(".profile-image").attr("src", "data:image/png;base64," + data.profilePic)
-        $("#picfileInput").val(data.profilePic);
+        // $("#picfileInput").val(data.profilePic);
         console.log($("#picfileInput").val())
     } else if (data.googleProfilePic) {
         $(".profile-image").attr("src", data.googleProfilePic)
-        $("#picfileinput").val(data.googleProfilePicture);
+        // $("#picfileinput").val(data.googleProfilePicture);
         console.log($("#picfileInput").val())
     } else {
         // console.log("i am here")
         $(".profile-image").attr("src", "/Images/avatar.png")
-        $("#picfileinput").val("");
+        // $("#picfileinput").val("");
         console.log($("#picfileInput").val())
         // console.log("i am here")
     }
@@ -191,19 +193,26 @@ $("#editForm").submit(function (event) {
             console.log("hereeeee")
             if (data.status) {
                 console.log("runnng");
-                $(".modal").fadeOut(500);
+                $("#modelId").modal("hide");
                 $(".toast-text").text("Edited successfully")
                 $(".toast-header").text("Succcess");
                 $('.toast').toast({ delay: 3000 });
                 $(".toast").css("background-color", "green")
                 $('.toast').toast('show');
+                $('.toast').on('hidden.bs.toast', function () {
+                    location.reload();
+                });
             } else {
                 console.log("runnng not")
+                $("#modelId").modal("hide");
                 $('.toast').toast({ delay: 3000 })
                 $(".toast-header").text("Failed");
                 $(".toast-text").text("An eror occured")
                 $(".toast").css("background-color", "red")
                 $('.toast').toast('show');
+                $('.toast').on('hidden.bs.toast', function () {
+                    location.reload();
+                });
             }
         })
         ;

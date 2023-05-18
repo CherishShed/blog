@@ -258,7 +258,7 @@ app.post("/profiledetails", upload.single('profilePic'), (req, res) => {
     }
 
     profilePic = profilePic.toString("base64");
-    User.findByIdAndUpdate(req.user._id, { $set: { profilePic: profilePic, firstName: req.body.fname, lastName: req.body.lname, username: req.body.email, name: `${req.body.fname} ${req.body.lname}`, profileUrl: `profile/${req.user._id}` } })
+    User.findByIdAndUpdate(req.user._id, { $set: { profilePic: profilePic, firstName: toTitleCase(req.body.fname), lastName: toTitleCase(req.body.lname), username: (req.body.email).toLowerCase(), profileUrl: `profile/${req.user._id}` } })
         .then(() => {
             if (fs.existsSync(req.file.path)) {
                 fs.unlink(req.file.path, (err) => {
@@ -278,13 +278,13 @@ app.post("/editprofiledetails", upload.single('profilePic'), async (req, res) =>
         const user = await User.findById(req.user._id);
         const formData = req.body;
         if (req.file) {
-            user.profilePic = fs.readFileSync(req.file, 'base64');
+            user.profilePic = fs.readFileSync(req.file.path, 'base64');
         }
         if (formData.fname) {
-            user.firstName = formData.fname;
+            user.firstName = toTitleCase(formData.fname);
         }
         if (formData.lname) {
-            user.firstName = formData.fname;
+            user.lastName = toTitleCase(formData.lname);
         }
         if (formData.about) {
             user.about = formData.about;
@@ -315,7 +315,8 @@ app.post("/editprofiledetails", upload.single('profilePic'), async (req, res) =>
 app.get("/api/getmyprofile", async (req, res) => {
     if (req.isAuthenticated()) {
         console.log("here");
-        res.json(req.user);
+        let user = await User.findById(req.user._id);
+        res.json(user);
 
     } else {
         res.redirect("/login")
@@ -337,11 +338,12 @@ app.get("/api/profile/:id", async (req, res) => {
     }
     User.findById(id).populate("posts")
         .then(user => {
+            user.name = (user.name)
             res.json({ user, signedInUser, inSession });
         })
 })
 app.post("/signup", (req, res) => {
-    User.register({ username: req.body.username }, req.body.password, (err, foundUser) => {
+    User.register({ username: req.body.username.toLowerCase() }, req.body.password, (err, foundUser) => {
         if (err) {
             console.log(err);
             res.redirect("/signup");
@@ -401,6 +403,14 @@ app.listen(PORT, () => {
     console.log("listening on port " + PORT);
 })
 
+
+
+
+function toTitleCase(str) {
+    return str.replace(/\w\S*/g, function (txt) {
+        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+    });
+}
 // function populateDb() {
 //     let person = "Maya Patel"
 //     let comment = "As a journalist and writer, I find Sorosoke to be an invaluable resource for staying informed and up-to-date on the latest news and trends. The site's articles are consistently well-researched and thoughtfully written, and I appreciate the variety of topics covered. Sorosoke is a must-read for anyone who cares about social justice and progressive values."
