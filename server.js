@@ -251,7 +251,7 @@ app.post("/profiledetails", upload.single('profilePic'), (req, res) => {
     }
 
     profilePic = profilePic.toString("base64");
-    User.findByIdAndUpdate(req.user._id, { $set: { profilePic: profilePic, firstName: toTitleCase(req.body.fname), lastName: toTitleCase(req.body.lname), username: (req.body.email).toLowerCase(), profileUrl: `profile/${req.user._id}` } })
+    User.findByIdAndUpdate(req.user._id, { $set: { profilePic: profilePic, firstName: toTitleCase(req.body.fname), lastName: toTitleCase(req.body.lname), username: req.body.email, profileUrl: `profile/${req.user._id}` } })
         .then(() => {
             if (fs.existsSync(req.file.path)) {
                 fs.unlink(req.file.path, (err) => {
