@@ -328,7 +328,9 @@ overflow-y: hidden;
     position: relative;
 }
 .blog-title{
-    color: var(--text)
+    color: var(--text);
+    font-weight: 500;
+        font-size: 20px;
 }
 
 .blog-title:hover {

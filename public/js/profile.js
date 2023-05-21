@@ -192,7 +192,7 @@ $("#editForm").submit(function (event) {
                 $("#modelId").modal("hide");
                 $(".toast-text").text("Edited successfully")
                 $(".toast-header").text("Succcess");
-                $('.toast').toast({ delay: 3000 });
+                $('.toast').toast({ delay: 2000 });
                 $(".toast").css("background-color", "green")
                 $('.toast').toast('show');
                 $('.toast').on('hide.bs.toast', function () {
@@ -201,7 +201,7 @@ $("#editForm").submit(function (event) {
             } else {
                 console.log("runnng not")
                 $("#modelId").modal("hide");
-                $('.toast').toast({ delay: 3000 })
+                $('.toast').toast({ delay: 2000 })
                 $(".toast-header").text("Failed");
                 $(".toast-text").text("An eror occured")
                 $(".toast").css("background-color", "red")

@@ -27,16 +27,27 @@
 <body>
     <!-- <hr class="divider"> -->
     <%- include('partials/nav.ejs') %>
-        <div class="post-hero">
-            <div class="post-hero-image">
-                <img src="" alt="">
+        <div class="post-hero-container">
+            <div class="post-hero">
+                <div class="post-hero-image">
+                    <img src="" alt="">
+                </div>
+                <div class="post-intro">
+                    <div>
+                        <h2 id="open-post-title"></h2>
+                        <p id="open-post-description"></p>
+                    </div>
+                    <div class="author-info">
+                        <img src="" alt="" class="profile-pic" id="author-pic">
+                        <a id="open-post-author" href=""></a>
+                    </div>
+                </div>
             </div>
-            <div class="post-intro">
-                <h2 id="open-post-title"></h2>
-                <p id="open-post-description"></p>
-                <div class="author-info">
-                    <img src="" alt="" class="profile-pic" id="author-pic">
-                    <a id="open-post-author" href=""></a>
+            <div class="actions">
+                <div class="action-group">
+                    <button class="btn btn-outline-light action" role="button" id="applause" title="applause"><i
+                            class="fa-solid fa-hands-clapping"></i></button>
+                    <p class="action-count" id="applause-count count"></p>
                 </div>
             </div>
         </div>
@@ -52,7 +63,7 @@
             </div>
             <div class="more-posts" data-aos="flip-up"></div>
         </div>
-        </div>
+
         <%- include('partials/footer.ejs') %>
             <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
             <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"

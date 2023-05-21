@@ -10,7 +10,6 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const cors = require('cors');
 const multer = require("multer");
-const { Console } = require("console");
 var corsOptions = {
     origin: "*"
 }
@@ -43,7 +42,11 @@ const userSchema = new mongoose.Schema({
     profilePic: String,
     profileUrl: String,
     socials: { linkedin: String, facebook: String, twitter: String, instagram: String },
-    about: String
+    about: String,
+    applaudedPosts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "blogPost"
+    }]
 })
 
 const postSchema = new mongoose.Schema({
@@ -56,7 +59,8 @@ const postSchema = new mongoose.Schema({
     },
     content: String,
     url: String,
-    tags: [String]
+    tags: [String],
+    applause: { type: Number, default: 0 }
 }, { timestamps: true })
 
 const reviewSchema = new mongoose.Schema({
@@ -168,6 +172,7 @@ app.get('/auth/google/blog', passport.authenticate('google', {
 
 app.get("/login", (req, res) => {
     // populateDb();
+    console.log("in here")
     req.session.previousUrl = req.headers.referer || '/';
     const previousUrl = req.session.previousUrl;
     // console.log(previousUrl)
@@ -397,6 +402,54 @@ app.get("/logout", (req, res) => {
             res.redirect("/");
         }
     });
+})
+
+app.get("/api/giveApplause", async (req, res) => {
+    if (req.isAuthenticated()) {
+        try {
+            const user = await User.findById(req.user._id);
+            if (user) {
+                if (user.applaudedPosts.indexOf(req.query.postId) == -1) {
+                    user.applaudedPosts.push(req.query.postId)
+                    await user.save();
+
+                    try {
+                        const post = await Post.findById(req.query.postId);
+                        if (post) {
+
+                            post.applause += 1;
+                            await post.save()
+                            res.json({ message: "Done adding like" });
+                        }
+                    } catch (err) {
+                        res.status(404).send("Not found")
+                    }
+                } else {
+                    var newArray = user.applaudedPosts.slice();
+                    newArray.splice(user.applaudedPosts.indexOf(req.query.postId), 1);
+                    user.applaudedPosts = newArray;
+                    user.save();
+                    try {
+                        const post = await Post.findById(req.query.postId);
+                        if (post) {
+                            post.applause -= 1;
+                            await post.save()
+                            res.json({ message: "Done removing like" });
+                        }
+                    } catch (err) {
+                        res.status(404).send("Not found")
+                    }
+                }
+
+            } else {
+                res.status(404).send("Not found")
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    } else {
+        res.json({ message: "no user" })
+    }
 })
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

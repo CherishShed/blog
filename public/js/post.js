@@ -14,7 +14,7 @@ postController.fetchPostById("api" + postUrl)
 
         }
         if (post.signedInUser) {
-
+            console.log(post.signedInUser.username)
             if (post.signedInUser.profilePic != null) {
                 var profilePicture = post.signedInUser.profilePic;
                 $("#profile-pic").attr('src', "data:image/png;base64," + profilePicture)
@@ -25,10 +25,15 @@ postController.fetchPostById("api" + postUrl)
             $("#profile-name").text(post.signedInUser.firstName);
             $(".myProfile").attr("href", post.signedInUser.profileUrl)
 
+            // Store the user details in sessionStorage
+            sessionStorage.setItem("user", JSON.stringify(post.signedInUser));
+
         }
         console.log("we are here");
         let openPost = post.data;
         console.log(openPost)
+        $("#applause").data("postid", openPost._id);
+        $("#applause-count").text(openPost.applause);
         $(".post-hero-image img").attr("src", "data:image/png;base64," + openPost.coverImage);
         $("#open-post-title").text(openPost.title);
         $("#open-post-description").text(openPost.description);
@@ -115,8 +120,33 @@ postController.fetchPostById("api" + postUrl)
 setTimeout(function () {
     $(".preloader").fadeOut(300);
 }, 3000)
-// postController.fetchAllPosts()
-//     .then((result) => {
-//         // console.log(result)
 
+$("#applause").click(function () {
+    console.log("i no sabi")
+    const postId = $(this).data("postid");
+    fetch(`/api/giveApplause?postId=${postId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.message == "no user") {
+                console.log("No user found")
+                document.querySelector('.get-started').click()
+            } else {
+                $("#applause").toggleClass("done-action");
+
+            }
+
+        })
+        ;
+})
+// if () {
+//     console.log("runnng");
+//     $("#modelId").modal("hide");
+//     $(".toast-text").text("Edited successfully")
+//     $(".toast-header").text("Succcess");
+//     $('.toast').toast({ delay: 2000 });
+//     $(".toast").css("background-color", "green")
+//     $('.toast').toast('show');
+//     $('.toast').on('hide.bs.toast', function () {
+//         location.reload();
 //     })
+// }
