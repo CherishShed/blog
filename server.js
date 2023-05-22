@@ -10,7 +10,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const cors = require('cors');
 const multer = require("multer");
-
+const cheerio = require("cheerio");
 var corsOptions = {
     origin: "*"
 }
@@ -173,7 +173,7 @@ app.get('/auth/google/blog', passport.authenticate('google', {
 
 app.get("/login", (req, res) => {
     // populateDb();
-    console.log("in here")
+    console.log("in login")
     req.session.previousUrl = req.headers.referer || '/';
     const previousUrl = req.session.previousUrl;
     // console.log(previousUrl)
@@ -227,9 +227,15 @@ app.get("/api/posts/:id", async (req, res) => {
         .then((data) => {
             // console.log(data)
             // console.log(user);
+            // Extract purified text and formatting metadata
+            const { purifiedText, formatting } = data.content;
+
+            // Generate HTML output based on the formatting metadata
+            const formattedHTML = generateFormattedHTML(purifiedText, formatting);
+
             User.findById(data.author.id).populate("posts")
                 .then((user) => {
-                    res.json({ data, inSession, author: user, signedInUser });
+                    res.json({ data, inSession, author: user, signedInUser, formattedHTML });
                 })
         })
 })
@@ -381,12 +387,11 @@ app.post("/login", (req, res) => {
     })
 })
 app.get("/createpost", (req, res) => {
-    // if (req.isAuthenticated()) {
-    //     res.render("createpost")
-    // } else {
-    //     res.redirect("/login")
-    // }
-    res.render("createpost")
+    if (req.isAuthenticated()) {
+        res.render("createpost")
+    } else {
+        res.redirect("/login")
+    }
 })
 app.get("/api/createpost", async (req, res) => {
     var signedInUser = false
@@ -399,26 +404,25 @@ app.get("/api/createpost", async (req, res) => {
     res.json({ inSession, signedInUser })
 })
 app.post("/api/createpost", upload.single("coverImage"), async (req, res) => {
+    console.log("creating...")
     if (req.isAuthenticated()) {
-        const tempElement = document.createElement('div');
-        tempElement.innerHTML = htmlContent;
-        const purifiedText = tempElement.textContent || tempElement.innerText;
-
-        // Extract formatting metadata (e.g., bold, italics, headers) using DOM manipulation
-        const formatting = extractFormattingMetadata(tempElement);
-
+        const user = await User.findById(req.user._id);
+        var htmlContent = req.body.content
         // Create a new document in MongoDB
-        const content = new Content({
+        const $ = cheerio.load(htmlContent);
+        const purifiedText = $.text();
+        const formatting = extractFormattingMetadata($);
+        const content = {
             purifiedText,
             formatting
-        });
+        };
         const formData = req.body;
         const newPost = new Post({
             title: formData.title,
             description: formData.description,
             coverImage: "",
             author: req.user._id,
-            content: formData.content,
+            content: content,
             url: "",
             tags: ["Life", "Education"]
         });
@@ -431,8 +435,11 @@ app.post("/api/createpost", upload.single("coverImage"), async (req, res) => {
 
         newPost.save()
             .then((result) => {
-                newPost.url = `/post/${result._id}`
+                newPost.url = `/posts/${result._id}`
                 newPost.save();
+                user.posts.push(result._id);
+                user.save();
+                console.log(result);
                 res.json({ status: true })
             })
             .catch((error) => {
@@ -535,3 +542,83 @@ function toTitleCase(str) {
 //     review.save();
 
 // }
+
+// Function to extract formatting metadata from the HTML content
+// Function to extract formatting metadata from the HTML content
+function extractFormattingMetadata(htmlContent) {
+    const formatting = {
+        bold: [],
+        italics: [],
+        headers: []
+    };
+
+    // Load the HTML content using cheerio
+    const $ = cheerio.load(htmlContent);
+
+    // Extract bold formatting
+    $('strong, b').each((index, element) => {
+        const startIndex = $(element).text().indexOf($(element).html());
+        const endIndex = startIndex + $(element).html().length;
+        formatting.bold.push({ startIndex, endIndex });
+    });
+
+    // Extract italics formatting
+    $('em, i').each((index, element) => {
+        const startIndex = $(element).text().indexOf($(element).html());
+        const endIndex = startIndex + $(element).html().length;
+        formatting.italics.push({ startIndex, endIndex });
+    });
+
+    // Extract header formatting
+    $('h1, h2, h3, h4, h5, h6').each((index, element) => {
+        const headerLevel = parseInt($(element).prop('tagName').substring(1));
+        const startIndex = $(element).text().indexOf($(element).html());
+        const endIndex = startIndex + $(element).html().length;
+        formatting.headers.push({ level: headerLevel, startIndex, endIndex });
+    });
+
+    return formatting;
+}
+
+// Function to generate formatted HTML using the purified text and formatting metadata
+function generateFormattedHTML(purifiedText, formatting) {
+    let formattedHTML = purifiedText;
+
+    // Apply bold formatting
+    formatting.bold.forEach(({ startIndex, endIndex }) => {
+        formattedHTML = insertTag(formattedHTML, '<strong>', startIndex);
+        formattedHTML = insertTag(formattedHTML, '</strong>', endIndex + 8);
+    });
+
+    // Apply italics formatting
+    formatting.italics.forEach(({ startIndex, endIndex }) => {
+        formattedHTML = insertTag(formattedHTML, '<em>', startIndex);
+        formattedHTML = insertTag(formattedHTML, '</em>', endIndex + 5);
+    });
+
+    // Apply header formatting
+    formatting.headers.forEach(({ level, startIndex, endIndex }) => {
+        const headerTag = `h${level}`;
+        formattedHTML = insertTag(formattedHTML, `<${headerTag}>`, startIndex);
+        formattedHTML = insertTag(formattedHTML, `</${headerTag}>`, endIndex + headerTag.length + 3);
+    });
+
+    return formattedHTML;
+}
+
+// Helper function to insert a tag into a string at a specific index
+function insertTag(originalString, tag, index) {
+    return originalString.slice(0, index) + tag + originalString.slice(index);
+}
+
+// Example usage
+const htmlContent = '<p>This is <strong>bold</strong> and <em>italics</em> text. <h2>Header 2</h2></p>';
+
+const formatting = extractFormattingMetadata(htmlContent);
+console.log(formatting);
+
+const purifiedText = cheerio.load(htmlContent).text();
+console.log(purifiedText);
+
+const formattedHTML = generateFormattedHTML(purifiedText, formatting);
+console.log(formattedHTML);

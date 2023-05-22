@@ -53,10 +53,8 @@ $("#coverImage").change(function (event) {
 });
 
 $(".submit").click(function () {
-    var text = (document.querySelector("trix-editor").editor.getDocument()).toString();
-    console.log(text);
+    $("#createForm").submit()
 })
-
 
 $("#createForm").submit(function (event) {
     // Prepare the form data
@@ -65,7 +63,7 @@ $("#createForm").submit(function (event) {
     const formData = new FormData(this);
 
     // Perform the POST request
-    fetch('/createpost', {
+    fetch('/api/createpost', {
         method: 'POST',
         body: formData
     })
@@ -75,7 +73,7 @@ $("#createForm").submit(function (event) {
             if (data.status) {
                 console.log("runnng");
                 $("#modelId").modal("hide");
-                $(".toast-text").text("Edited successfully")
+                $(".toast-text").text("Posted")
                 $(".toast-header").text("Succcess");
                 $('.toast').toast({ delay: 2000 });
                 $(".toast").css("background-color", "green")
@@ -98,3 +96,4 @@ $("#createForm").submit(function (event) {
         })
         ;
 });
+

@@ -241,6 +241,24 @@ trix-editor{
     display: block;
     margin: 0 auto;
 }
+.toast {
+    position: absolute;
+    z-index: 5;
+    /* top: 0; */
+    right: 0;
+    min-width: 100px;
+    width: 200px;
+    text-align: left;
+    align-items: center;
+    min-height: 50px;
+    /* display: non; */
+}
+
+.toast-text {
+    color: white;
+    color: bold;
+    font-size: 20px;
+}
 @media (max-width: 300px) {
     .newsletter h1 {
         font-size: 30px;
