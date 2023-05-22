@@ -37,8 +37,10 @@ if (Profile.signedInUser) {
         $("#profile-pic").attr('src', profilePicture)
     }
     $("#profile-name").text(Profile.signedInUser.firstName);
-    console.log(Profile.signedInUser.name)
-    const creatorId = Profile.signedInUser._id
+    $(".myProfile").attr("href", post.signedInUser.profileUrl)
+    // Store the user details in sessionStorage
+    sessionStorage.setItem("user", JSON.stringify(post.signedInUser));
+
 
 }
 

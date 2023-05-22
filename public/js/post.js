@@ -31,7 +31,9 @@ postController.fetchPostById("api" + postUrl)
         }
         console.log("we are here");
         let openPost = post.data;
+        let openPostContent = post.formattedHTML;
         console.log(openPost)
+        console.log(openPostContent);
         $("#applause").data("postid", openPost._id);
         $("#applause-count").text(openPost.applause);
         $(".post-hero-image img").attr("src", "data:image/png;base64," + openPost.coverImage);
@@ -40,7 +42,7 @@ postController.fetchPostById("api" + postUrl)
         $("#open-post-author").text(openPost.author.name);
         $("#open-post-author").attr("href", "/" + post.author.profileUrl);
         console.log(post.author.profileUrl)
-        $("#open-post-content ").text(openPost.content);
+        $("#open-post-content ").html(openPostContent);
 
         //other posts by author
         if (post.author.posts.length > 3) {
@@ -132,6 +134,17 @@ $("#applause").click(function () {
                 document.querySelector('.get-started').click()
             } else {
                 $("#applause").toggleClass("done-action");
+                if ($("#applause").hasClass("done-action")) {
+                    let currentLike = parseInt($("#applause-count").text());
+                    currentLike += 1;
+                    $("#applause-count").text(currentLike)
+                    console.log(currentLike)
+                } else {
+                    let currentLike = parseInt($("#applause-count").text());
+                    currentLike -= 1;
+                    $("#applause-count").text(currentLike)
+                    console.log(currentLike)
+                }
 
             }
 

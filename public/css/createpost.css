@@ -244,7 +244,7 @@ trix-editor{
 .toast {
     position: absolute;
     z-index: 5;
-    /* top: 0; */
+    top: 70px;
     right: 0;
     min-width: 100px;
     width: 200px;

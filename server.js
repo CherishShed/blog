@@ -231,7 +231,7 @@ app.get("/api/posts/:id", async (req, res) => {
             const { purifiedText, formatting } = data.content;
 
             // Generate HTML output based on the formatting metadata
-            const formattedHTML = generateFormattedHTML(purifiedText, formatting);
+            const formattedHTML = applyFormatting(purifiedText, formatting)
 
             User.findById(data.author.id).populate("posts")
                 .then((user) => {
@@ -408,9 +408,10 @@ app.post("/api/createpost", upload.single("coverImage"), async (req, res) => {
     if (req.isAuthenticated()) {
         const user = await User.findById(req.user._id);
         var htmlContent = req.body.content
+        console.log(htmlContent);
         // Create a new document in MongoDB
         const $ = cheerio.load(htmlContent);
-        const purifiedText = $.text();
+        const purifiedText = cleanseHTML(htmlContent);
         const formatting = extractFormattingMetadata($);
         const content = {
             purifiedText,
@@ -545,6 +546,8 @@ function toTitleCase(str) {
 
 // Function to extract formatting metadata from the HTML content
 // Function to extract formatting metadata from the HTML content
+
+// Function to extract formatting metadata from the HTML content
 function extractFormattingMetadata(htmlContent) {
     const formatting = {
         bold: [],
@@ -558,14 +561,14 @@ function extractFormattingMetadata(htmlContent) {
     // Extract bold formatting
     $('strong, b').each((index, element) => {
         const startIndex = $(element).text().indexOf($(element).html());
-        const endIndex = startIndex + $(element).html().length;
+        const endIndex = startIndex + $(element).html().length - 1;
         formatting.bold.push({ startIndex, endIndex });
     });
 
     // Extract italics formatting
     $('em, i').each((index, element) => {
         const startIndex = $(element).text().indexOf($(element).html());
-        const endIndex = startIndex + $(element).html().length;
+        const endIndex = startIndex + $(element).html().length - 1;
         formatting.italics.push({ startIndex, endIndex });
     });
 
@@ -573,7 +576,7 @@ function extractFormattingMetadata(htmlContent) {
     $('h1, h2, h3, h4, h5, h6').each((index, element) => {
         const headerLevel = parseInt($(element).prop('tagName').substring(1));
         const startIndex = $(element).text().indexOf($(element).html());
-        const endIndex = startIndex + $(element).html().length;
+        const endIndex = startIndex + $(element).html().length - 1;
         formatting.headers.push({ level: headerLevel, startIndex, endIndex });
     });
 
@@ -581,35 +584,89 @@ function extractFormattingMetadata(htmlContent) {
 }
 
 // Function to generate formatted HTML using the purified text and formatting metadata
-function generateFormattedHTML(purifiedText, formatting) {
-    let formattedHTML = purifiedText;
+function applyFormatting(purifiedText, formatting) {
+    let formattedText = purifiedText;
 
     // Apply bold formatting
     formatting.bold.forEach(({ startIndex, endIndex }) => {
-        formattedHTML = insertTag(formattedHTML, '<strong>', startIndex);
-        formattedHTML = insertTag(formattedHTML, '</strong>', endIndex + 8);
+        formattedText = formattedText.slice(0, startIndex) + '<strong>' + formattedText.slice(startIndex, endIndex + 1) + '</strong>' + formattedText.slice(endIndex + 1);
     });
 
     // Apply italics formatting
     formatting.italics.forEach(({ startIndex, endIndex }) => {
-        formattedHTML = insertTag(formattedHTML, '<em>', startIndex);
-        formattedHTML = insertTag(formattedHTML, '</em>', endIndex + 5);
+        formattedText = formattedText.slice(0, startIndex) + '<em>' + formattedText.slice(startIndex, endIndex + 1) + '</em>' + formattedText.slice(endIndex + 1);
     });
 
     // Apply header formatting
     formatting.headers.forEach(({ level, startIndex, endIndex }) => {
-        const headerTag = `h${level}`;
-        formattedHTML = insertTag(formattedHTML, `<${headerTag}>`, startIndex);
-        formattedHTML = insertTag(formattedHTML, `</${headerTag}>`, endIndex + headerTag.length + 3);
+        const headerTag = 'h' + level;
+        formattedText = formattedText.slice(0, startIndex) + '<' + headerTag + '>' + formattedText.slice(startIndex, endIndex + 1) + '</' + headerTag + '>' + formattedText.slice(endIndex + 1);
     });
 
-    return formattedHTML;
+    return formattedText;
 }
 
-// Helper function to insert a tag into a string at a specific index
-function insertTag(originalString, tag, index) {
-    return originalString.slice(0, index) + tag + originalString.slice(index);
+function cleanseHTML(html) {
+    const $ = cheerio.load(html);
+
+    // Remove unwanted tags
+    $('body')
+        .find(':not(strong, b, em, i, h1, h2, h3, h4, h5, h6, p)')
+        .each((index, element) => {
+            $(element).replaceWith($(element).html());
+        });
+
+    // Remove unwanted attributes
+    $('*').each((index, element) => {
+        const attributes = $(element)[0].attribs;
+        Object.keys(attributes).forEach((attr) => {
+            if (!['src', 'href', 'alt'].includes(attr)) {
+                $(element).removeAttr(attr);
+            }
+        });
+    });
+
+    return $.html();
 }
+
+
+
+// Function to extract formatting metadata from the HTML content
+function extractFormattingMetadata(htmlContent) {
+    const formatting = {
+        bold: [],
+        italics: [],
+        headers: []
+    };
+
+    // Load the HTML content using cheerio
+    const $ = cheerio.load(htmlContent);
+
+    // Extract bold formatting
+    $('strong, b').each((index, element) => {
+        const startIndex = $(element).text().indexOf($(element).html());
+        const endIndex = startIndex + $(element).html().length - 1;
+        formatting.bold.push({ startIndex, endIndex });
+    });
+
+    // Extract italics formatting
+    $('em, i').each((index, element) => {
+        const startIndex = $(element).text().indexOf($(element).html());
+        const endIndex = startIndex + $(element).html().length - 1;
+        formatting.italics.push({ startIndex, endIndex });
+    });
+
+    // Extract header formatting
+    $('h1, h2, h3, h4, h5, h6').each((index, element) => {
+        const headerLevel = parseInt($(element).prop('tagName').substring(1));
+        const startIndex = $(element).text().indexOf($(element).html());
+        const endIndex = startIndex + $(element).html().length - 1;
+        formatting.headers.push({ level: headerLevel, startIndex, endIndex });
+    });
+
+    return formatting;
+}
+
 
 // Example usage
 const htmlContent = '<p>This is <strong>bold</strong> and <em>italics</em> text. <h2>Header 2</h2></p>';
@@ -620,5 +677,3 @@ console.log(formatting);
 const purifiedText = cheerio.load(htmlContent).text();
 console.log(purifiedText);
 
-const formattedHTML = generateFormattedHTML(purifiedText, formatting);
-console.log(formattedHTML);

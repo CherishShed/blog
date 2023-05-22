@@ -298,14 +298,14 @@ overflow-y: hidden;
     padding:20px 0;
     height: 100%;
     width: 100%;
-    gap: 30px;
-    /* justify-content: space-around; */
+    gap: 10px;
+    justify-content: space-between;
 }
 .blog-details{
-    min-width: 30%;
-    width: 30%;
+    min-width: 210px;
+    width: 300px;
     height: 70%;
-    
+    min-height: 300px;
 }
 
 .blog-image{
