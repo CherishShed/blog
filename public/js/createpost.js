@@ -1,3 +1,6 @@
+import userController from "./userCotroller.js";
+import postController from "./postController.js";
+
 setTimeout(function () {
     $(".preloader").fadeOut(300);
 }, 4000)
@@ -11,7 +14,7 @@ AOS.init({
     delay: 0
 });
 
-import userController from "./userCotroller.js";
+
 var profileUrl = window.location.pathname;
 // console.log(window.location);
 
@@ -37,9 +40,9 @@ if (Profile.signedInUser) {
         $("#profile-pic").attr('src', profilePicture)
     }
     $("#profile-name").text(Profile.signedInUser.firstName);
-    $(".myProfile").attr("href", post.signedInUser.profileUrl)
+    $(".myProfile").attr("href", Profile.signedInUser.profileUrl)
     // Store the user details in sessionStorage
-    sessionStorage.setItem("user", JSON.stringify(post.signedInUser));
+    sessionStorage.setItem("user", JSON.stringify(Profile.signedInUser));
 
 
 }
@@ -99,3 +102,24 @@ $("#createForm").submit(function (event) {
         ;
 });
 
+const tags = await postController.fetchTags();
+console.log(tags);
+tags.forEach((tag) => {
+    let tagLabel = $("<label></label>")
+    let tagCheck = $(`<input type='checkbox' name='tags' value='${tag.name}'></label>`);
+    $(tagLabel).append(tagCheck);
+    $(tagLabel).append(tag.name)
+    $(".tag-selector").append(tagLabel);
+})
+
+$('input[name="tags"]').change(function () {
+    // Handle checkbox change event
+    var disableOthers = false;
+    if ($('input[name="tags"]:checked').length >= 3) {
+        document.querySelectorAll('input[name="tags"]:not(:checked)').forEach((box) => {
+            box.setAttribute('disabled', true);
+        })
+    }
+
+    console.log('Selected values:', $('input[name="tags"]:not(:checked)').length);
+});

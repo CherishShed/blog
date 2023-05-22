@@ -70,10 +70,9 @@ const reviewSchema = new mongoose.Schema({
     reviewImage: String,
 }, { timestamps: true })
 
-
-
-
-
+const tagSchema = new mongoose.Schema({
+    name: String
+})
 userSchema.virtual('name').get(function () {
     return this.firstName + ' ' + this.lastName;
 });
@@ -83,6 +82,7 @@ userSchema.plugin(findOrCreate);
 const User = mongoose.model("user", userSchema);
 const Post = mongoose.model("blogPost", postSchema);
 const Review = mongoose.model("review", reviewSchema);
+const Tag = mongoose.model("tag", tagSchema);
 passport.use(User.createStrategy());
 passport.serializeUser(function (user, cb) {
     process.nextTick(function () {
@@ -122,7 +122,6 @@ app.get("/", (req, res) => {
                     .then((post) => {
                         res.render("index", { user, post, inSession })
                     }
-                        // console.log(user);
                     );
             })
     } else {
@@ -130,16 +129,14 @@ app.get("/", (req, res) => {
             .then((post) => {
                 res.render("index", { post })
             }
-                // console.log(user);
             );
     }
 })
 
 app.get("/api/getallPosts", (req, res) => {
-    // console.log(req.user)
     var inSession = false
     if (req.isAuthenticated()) {
-        // console.log(req.user)
+
         inSession = true
     }
     var signedInUser = false
@@ -176,9 +173,9 @@ app.get("/login", (req, res) => {
     console.log("in login")
     req.session.previousUrl = req.headers.referer || '/';
     const previousUrl = req.session.previousUrl;
-    // console.log(previousUrl)
+
     if (req.isAuthenticated()) {
-        // console.log(req.user)
+
         User.findById(req.user.id)
             .then((user) => {
                 if (user.firstName === null || user.lastName === null || (user.profilePic != null && user.googleProfilePic != null)) {
@@ -425,7 +422,7 @@ app.post("/api/createpost", upload.single("coverImage"), async (req, res) => {
             author: req.user._id,
             content: content,
             url: "",
-            tags: ["Life", "Education"]
+            tags: formData.tags
         });
 
         if (req.file) {
@@ -453,6 +450,10 @@ app.post("/api/createpost", upload.single("coverImage"), async (req, res) => {
 
 })
 
+app.get("/api/tags", async (req, res) => {
+    const tags = await Tag.find({});
+    res.json(tags);
+})
 app.get("/api/reviews", (req, res) => {
     Review.find({})
         .then((reviews) => {
@@ -531,16 +532,34 @@ function toTitleCase(str) {
     });
 }
 // function populateDb() {
-//     let person = "Maya Patel"
-//     let comment = "As a journalist and writer, I find Sorosoke to be an invaluable resource for staying informed and up-to-date on the latest news and trends. The site's articles are consistently well-researched and thoughtfully written, and I appreciate the variety of topics covered. Sorosoke is a must-read for anyone who cares about social justice and progressive values."
-
-
-//     let chosenImage = "./public/Images/pexels-andrea-piacquadio-3781530.jpg"
-//     let reviewImage = fs.readFileSync(chosenImage, "base64")
-//     const review = new Review({
-//         person, comment, reviewImage
+//     const tags = [
+//         'Technology',
+//         'Travel',
+//         'Food',
+//         'Health',
+//         'Fitness',
+//         'Fashion',
+//         'Art',
+//         'Photography',
+//         'Science',
+//         'Business',
+//         'Music',
+//         'Sports',
+//         'Movies',
+//         'Books',
+//         'Gaming',
+//         'Lifestyle',
+//         'DIY',
+//         'Education',
+//         'Nature',
+//         'History'
+//     ];
+//     tags.forEach((tag) => {
+//         const newTag = new Tag({
+//             name: tag
+//         })
+//         newTag.save();
 //     })
-//     review.save();
 
 // }
 

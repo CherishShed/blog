@@ -23,6 +23,11 @@ const postController = {
         const response = await fetch("http://localhost:8081/api/recentposts");
         const data = await response.json();
         return data;
+    },
+    fetchTags: async function () {
+        const response = await fetch("http://localhost:8081/api/tags");
+        const data = await response.json();
+        return data;
     }
 }
 

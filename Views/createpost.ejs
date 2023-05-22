@@ -29,7 +29,7 @@
     <%- include('partials/nav.ejs') %>
         <form action="/createpost" method="POST" id="createForm">
             <input id="x" type="hidden" name="content">
-            <input type="text" name="title" id="postTitle" placeholder="TITLE" required>
+            <input type="text" name="title" id="postTitle" placeholder="TITLE" required class="block-display">
             <div class="coverPic-container">
                 <h3>Cover Image</h3>
                 <div class="coverPic">
@@ -37,7 +37,8 @@
                         <img src="/Images/pexels-jessica-lewis-creative-606541.jpg" alt="" class="cover-image">
                     </div>
                     <label>
-                        <input type="file" style="display:none" id="coverImage" name="coverImage" accept="image/*" />
+                        <input type="file" style="display:none" id="coverImage" name="coverImage" accept="image/*"
+                            class="block-display" />
                     </label>
                     <span class="pic-icon btn btn-outline-dark"
                         onclick="document.getElementById('coverImage').click()">Upload
@@ -47,7 +48,12 @@
             <textarea name="description" id="postDescription" placeholder="Description...(NO TOO MUCH TALK ABEG)"
                 required></textarea>
             <div class="editor">
-                <trix-editor input="x" placeholder="Type here..." required></trix-editor>
+                <trix-editor input="x" placeholder="Type here..." required class="block-display"></trix-editor>
+            </div>
+            <div>
+                <p style="color: red;">You can select at most 3</p>
+                <div class="tag-selector">
+                </div>
             </div>
 
         </form>
