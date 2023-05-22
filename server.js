@@ -10,6 +10,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const findOrCreate = require("mongoose-findorcreate");
 const cors = require('cors');
 const multer = require("multer");
+
 var corsOptions = {
     origin: "*"
 }
@@ -57,7 +58,7 @@ const postSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "user"
     },
-    content: String,
+    content: { purifiedText: String, formatting: Object },
     url: String,
     tags: [String],
     applause: { type: Number, default: 0 }
@@ -380,11 +381,68 @@ app.post("/login", (req, res) => {
     })
 })
 app.get("/createpost", (req, res) => {
+    // if (req.isAuthenticated()) {
+    //     res.render("createpost")
+    // } else {
+    //     res.redirect("/login")
+    // }
+    res.render("createpost")
+})
+app.get("/api/createpost", async (req, res) => {
+    var signedInUser = false
+    var inSession = false
     if (req.isAuthenticated()) {
+        signedInUser = await User.findById(req.user._id);
+        console.log(signedInUser.name)
+        inSession = true
+    }
+    res.json({ inSession, signedInUser })
+})
+app.post("/api/createpost", upload.single("coverImage"), async (req, res) => {
+    if (req.isAuthenticated()) {
+        const tempElement = document.createElement('div');
+        tempElement.innerHTML = htmlContent;
+        const purifiedText = tempElement.textContent || tempElement.innerText;
+
+        // Extract formatting metadata (e.g., bold, italics, headers) using DOM manipulation
+        const formatting = extractFormattingMetadata(tempElement);
+
+        // Create a new document in MongoDB
+        const content = new Content({
+            purifiedText,
+            formatting
+        });
+        const formData = req.body;
+        const newPost = new Post({
+            title: formData.title,
+            description: formData.description,
+            coverImage: "",
+            author: req.user._id,
+            content: formData.content,
+            url: "",
+            tags: ["Life", "Education"]
+        });
+
+        if (req.file) {
+            newPost.coverImage = fs.readFileSync(req.file.path, 'base64');
+        } else {
+            newPost.coverImage = fs.readFileSync("./public/Images/pexels-jessica-lewis-creative-606541.jpg", 'base64');
+        }
+
+        newPost.save()
+            .then((result) => {
+                newPost.url = `/post/${result._id}`
+                newPost.save();
+                res.json({ status: true })
+            })
+            .catch((error) => {
+                res.json({ status: false })
+            })
 
     } else {
-        res.redirect("/login")
+        res.redirect("/login");
     }
+
 })
 
 app.get("/api/reviews", (req, res) => {

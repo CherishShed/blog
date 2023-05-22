@@ -131,23 +131,9 @@ function fillPresentDetails(data) {
         $("#emailaddress").val(data.username)
     }
 
-    if ((data.profilePic) != null) {
-        console.log(typeof (data.profilePic));
-        $(".profile-image").attr("src", "data:image/png;base64," + data.profilePic)
-        // $("#picfileInput").val(data.profilePic);
-        console.log($("#picfileInput").val())
-    } else if (data.googleProfilePic) {
-        $(".profile-image").attr("src", data.googleProfilePic)
-        // $("#picfileinput").val(data.googleProfilePicture);
-        console.log($("#picfileInput").val())
-    } else {
-        // console.log("i am here")
-        $(".profile-image").attr("src", "/Images/avatar.png")
-        // $("#picfileinput").val("");
-        console.log($("#picfileInput").val())
-        // console.log("i am here")
-    }
-
+    $(".cover-image").attr("src", "data:image/png;base64," + data.profilePic)
+    // $("#picfileInput").val(data.profilePic);
+    console.log($("#picfileInput").val())
 
 }
 

@@ -1,5 +1,8 @@
 {
   "dependencies": {
+    "@ckeditor/ckeditor5-ckbox": "^37.1.0",
+    "@ckeditor/ckeditor5-ckfinder": "^37.1.0",
+    "@ckeditor/ckeditor5-editor-classic": "^37.1.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "ejs": "^3.1.9",
@@ -11,5 +14,9 @@
     "passport": "^0.6.0",
     "passport-google-oauth20": "^2.0.0",
     "passport-local-mongoose": "^8.0.0"
+  },
+  "devDependencies": {
+    "webpack": "^5.83.1",
+    "webpack-cli": "^5.1.1"
   }
 }
