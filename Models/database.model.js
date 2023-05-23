@@ -1,24 +1,62 @@
+require("dotenv").config();
 const mongoose = require('mongoose');
+const passportLocalMongoose = require('passport-local-mongoose');
+const findOrCreate = require("mongoose-findorcreate");
 
-mongoose.connect("mongodb://127.0.0.1:27017/blogDb", { useNewUrlParser: true });
+mongoose.connect("mongodb://127.0.0.1:27017/blogDB");
+const userSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+    firstName: String,
+    lastName: String,
+    posts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "blogPost"
+    }],
+    googleId: String,
+    googleProfilePic: String,
+    profilePic: String,
+    profileUrl: String,
+    socials: { linkedin: String, facebook: String, twitter: String, instagram: String },
+    about: String,
+    applaudedPosts: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "blogPost"
+    }]
+})
 
-const blogSchema = new mongoose.Schema({
-    title: {
-        type: "string",
-        required: true
+const postSchema = new mongoose.Schema({
+    title: String,
+    description: String,
+    coverImage: String,
+    author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "user"
     },
-    content: {
-        type: "string",
-        required: true
-    },
-    author: mongoose.ObjectID
+    content: { purifiedText: String, formatting: Object },
+    url: String,
+    tags: [String],
+    applause: { type: Number, default: 0 }
+}, { timestamps: true })
 
-}, { timestamps: true });
-function getData() {
-    return Fruit.find()
-}
+const reviewSchema = new mongoose.Schema({
+    person: String,
+    comment: String,
+    reviewImage: String,
+}, { timestamps: true })
 
-getData()
-    .then(function (data) {
-        console.log(data)
-    })
+const tagSchema = new mongoose.Schema({
+    name: String
+})
+userSchema.virtual('name').get(function () {
+    return this.firstName + ' ' + this.lastName;
+});
+userSchema.set("toJSON", { virtuals: true });
+userSchema.plugin(passportLocalMongoose);
+userSchema.plugin(findOrCreate);
+const User = mongoose.model("user", userSchema);
+const Post = mongoose.model("blogPost", postSchema);
+const Review = mongoose.model("review", reviewSchema);
+const Tag = mongoose.model("tag", tagSchema);
+
+module.exports = { User, Post, Review, Tag };

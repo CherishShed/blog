@@ -1,115 +1,17 @@
 require("dotenv").config();
-const express = require('express');
-const mongoose = require('mongoose');
-const app = express();
+const app = require('./Middleware/expressMiddleware');
 const fs = require('fs');
-const session = require("express-session");
-const passport = require('passport');
-const passportLocalMongoose = require('passport-local-mongoose');
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
-const findOrCreate = require("mongoose-findorcreate");
-const cors = require('cors');
+const passport = require('./Middleware/authMiddleware');
 const multer = require("multer");
 const cheerio = require("cheerio");
-var corsOptions = {
-    origin: "*"
-}
+const database = require("./Models/database.model");
 const upload = multer({ dest: "uploads/" })
-app.use(express.urlencoded({ extended: true }));
-app.set("view engine", "ejs");
-app.use(express.static("public", { root: __dirname }));
-app.use(cors(corsOptions));
-app.use(express.json());
-app.use(session({
-    secret: process.env.LOCAL_SECRET,
-    resave: false,
-    saveUninitialized: false
-}));
-app.use(passport.initialize());
-app.use(passport.session());
 
-mongoose.connect("mongodb://127.0.0.1:27017/blogDB");
-const userSchema = new mongoose.Schema({
-    username: String,
-    password: String,
-    firstName: String,
-    lastName: String,
-    posts: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "blogPost"
-    }],
-    googleId: String,
-    googleProfilePic: String,
-    profilePic: String,
-    profileUrl: String,
-    socials: { linkedin: String, facebook: String, twitter: String, instagram: String },
-    about: String,
-    applaudedPosts: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "blogPost"
-    }]
-})
 
-const postSchema = new mongoose.Schema({
-    title: String,
-    description: String,
-    coverImage: String,
-    author: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "user"
-    },
-    content: { purifiedText: String, formatting: Object },
-    url: String,
-    tags: [String],
-    applause: { type: Number, default: 0 }
-}, { timestamps: true })
-
-const reviewSchema = new mongoose.Schema({
-    person: String,
-    comment: String,
-    reviewImage: String,
-}, { timestamps: true })
-
-const tagSchema = new mongoose.Schema({
-    name: String
-})
-userSchema.virtual('name').get(function () {
-    return this.firstName + ' ' + this.lastName;
-});
-userSchema.set("toJSON", { virtuals: true });
-userSchema.plugin(passportLocalMongoose);
-userSchema.plugin(findOrCreate);
-const User = mongoose.model("user", userSchema);
-const Post = mongoose.model("blogPost", postSchema);
-const Review = mongoose.model("review", reviewSchema);
-const Tag = mongoose.model("tag", tagSchema);
-passport.use(User.createStrategy());
-passport.serializeUser(function (user, cb) {
-    process.nextTick(function () {
-        // console.log(user)
-        cb(null, user);
-    });
-});
-
-passport.deserializeUser(function (user, cb) {
-    process.nextTick(function () {
-        return cb(null, user);
-    });
-});
-passport.use(new GoogleStrategy({
-    clientID: process.env.CLIENT_ID,
-    clientSecret: process.env.CLIENT_SECRET,
-    callbackURL: "http://localhost:8081/auth/google/blog"
-},
-    function (accessToken, refreshToken, profile, cb) {
-        // console.log(profile)
-
-        User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, googleProfilePic: profile._json.picture, firstName: profile.name.givenName, lastName: profile.name.familyName }, function (err, user) {
-            return cb(err, user);
-
-        });
-    }
-));
+const User = database.User;
+const Post = database.Post;
+const Review = database.Review;
+const Tag = database.Tag;
 
 app.get("/", (req, res) => {
     // populateDb();
