@@ -41,6 +41,9 @@ const userController = {
             })
 
     },
+    displayProfile: async (req, res) => {
+        res.render("profile");
+    },
 
     editProfileDetails: async (req, res) => {
         console.log("i am trying to update")

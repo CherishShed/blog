@@ -11,7 +11,6 @@ const postController = require("./Controllers/post.Controller")
 const User = database.User;
 const Post = database.Post;
 const Review = database.Review;
-const Tag = database.Tag;
 
 app.get("/", (req, res) => {
     // populateDb();
@@ -75,32 +74,23 @@ app.get("/signup", (req, res) => {
     }
 })
 
-app.get("/api/getallPosts", postController.getAllPosts)
-app.get("/posts/:id", postController.displayPost)
-app.get("/api/posts/:id", postController.getPostById)
-
+//user APIs
 app.get("/profiledetails", userController.displayOriginalProfileDetails);
-
-
 app.post("/profiledetails", upload.single('profilePic'), userController.editOriginalProfileDetails)
-
 app.post("/editprofiledetails", upload.single('profilePic'), userController.editProfileDetails);
-
-
 app.get("/api/getmyprofile", userController.getMyPofile);
-app.get("/profile/:id", (req, res) => {
-    res.render("profile");
-});
+app.get("/profile/:id", userController.displayProfile);
 app.get("/api/profile/:id", userController.getPofileById);
 
-app.get("/api/recentposts", async (req, res) => {
-    let posts = await Post.find({}).populate("author", "firstName lastName profileUrl").sort({ createdAt: 'desc' });
-    // console.log(posts);
-    const shownRecentPosts = posts.slice(0, 7);
-    res.json(shownRecentPosts);
-
-})
-
+//Post APIs
+app.get("/createpost", postController.displayCreatePost);
+app.get("/api/createpost", postController.checkSignedInUser);
+app.post("/api/createpost", upload.single("coverImage"), postController.createPost);
+app.get("/api/getallPosts", postController.getAllPosts);
+app.get("/posts/:id", postController.displayPost);
+app.get("/api/posts/:id", postController.getPostById);
+app.get("/api/recentposts", postController.getRecentPosts);
+app.get("/api/tags", postController.getTags);
 app.post("/signup", (req, res) => {
     User.register({ username: req.body.username.toLowerCase() }, req.body.password, (err, foundUser) => {
         if (err) {
@@ -133,77 +123,7 @@ app.post("/login", (req, res) => {
         }
     })
 })
-app.get("/createpost", (req, res) => {
-    if (req.isAuthenticated()) {
-        res.render("createpost")
-    } else {
-        res.redirect("/login")
-    }
-})
-app.get("/api/createpost", async (req, res) => {
-    var signedInUser = false
-    var inSession = false
-    if (req.isAuthenticated()) {
-        signedInUser = await User.findById(req.user._id);
-        console.log(signedInUser.name)
-        inSession = true
-    }
-    res.json({ inSession, signedInUser })
-})
-app.post("/api/createpost", upload.single("coverImage"), async (req, res) => {
-    console.log("creating...")
-    if (req.isAuthenticated()) {
-        const user = await User.findById(req.user._id);
-        var htmlContent = req.body.content
-        console.log(htmlContent);
-        // Create a new document in MongoDB
-        const $ = cheerio.load(htmlContent);
-        const purifiedText = cleanseHTML(htmlContent);
-        const formatting = extractFormattingMetadata($);
-        const content = {
-            purifiedText,
-            formatting
-        };
-        const formData = req.body;
-        const newPost = new Post({
-            title: formData.title,
-            description: formData.description,
-            coverImage: "",
-            author: req.user._id,
-            content: content,
-            url: "",
-            tags: formData.tags
-        });
 
-        if (req.file) {
-            newPost.coverImage = fs.readFileSync(req.file.path, 'base64');
-        } else {
-            newPost.coverImage = fs.readFileSync("./public/Images/pexels-jessica-lewis-creative-606541.jpg", 'base64');
-        }
-
-        newPost.save()
-            .then((result) => {
-                newPost.url = `/posts/${result._id}`
-                newPost.save();
-                user.posts.push(result._id);
-                user.save();
-                console.log(result);
-                res.json({ status: true })
-            })
-            .catch((error) => {
-                res.json({ status: false })
-            })
-
-    } else {
-        res.redirect("/login");
-    }
-
-})
-
-app.get("/api/tags", async (req, res) => {
-    const tags = await Tag.find({});
-    res.json(tags);
-})
 app.get("/api/reviews", (req, res) => {
     Review.find({})
         .then((reviews) => {
