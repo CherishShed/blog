@@ -160,8 +160,7 @@ async function recentPosts() {
         const longText = $(blogDescription);
         const otherlongText = $(blogTitle);
 
-        const maxHeight = 70; // Adjust this value to match the desired height
-
+        const maxHeight = 70;
 
         if (longText.outerHeight() > maxHeight) {
 
@@ -177,22 +176,10 @@ async function recentPosts() {
 }
 
 
-// function otherHighlights() {
-//     // console.log(result)
-//     postController.fetchAllPosts()
-//         .then((result) => {
-
-
-
-//         })
-// }
-
-
 window.onload = async function () {
     await setMainHighlight();
     await recentPosts();
     setTimeout(function () {
         $(".preloader").fadeOut(300);
     }, 1000)
-    // otherHighlights();
 };

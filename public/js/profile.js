@@ -70,9 +70,12 @@ function profileData(profile) {
 
         let blogText = $("<div></div>");
         $(blogText).addClass("blog-text");
+        let blogTitleContainer = $("<div></div>");
+        $(blogTitleContainer).addClass("blog-title-container");
         let blogTitle = $("<a></a>").text(post.title);
-        $(blogTitle).attr("href", post.url);
         $(blogTitle).addClass("blog-title");
+        $(blogTitle).attr("href", post.url);
+        $(blogTitleContainer).append(blogTitle);
         let blogDescriptionContainer = $("<div></div>");
         $(blogDescriptionContainer).addClass("blog-description-container");
         let blogDescription = $("<p></p>").text(post.description);
@@ -86,20 +89,24 @@ function profileData(profile) {
             $(blogTags).append(tagDets);
         })
 
-        $(blogText).append(blogTitle, blogDescriptionContainer, blogTags);
+        $(blogText).append(blogTitleContainer, blogDescriptionContainer, blogTags);
         $(blogDetails).append(blogImage, blogText);
 
         $(".user-posts").append(blogDetails);
 
 
         const longText = $(blogDescription);
-        const maxHeight = 80; // Adjust this value to match the desired height
+        const otherlongText = $(blogTitle);
 
+        const maxHeight = 70;
 
         if (longText.outerHeight() > maxHeight) {
-            while (longText.outerHeight() > maxHeight) {
 
+            while (longText.outerHeight() > maxHeight) {
                 longText.text(longText.text().replace(/\W*\s(\S)*$/, '...'));
+            }
+            while (otherlongText.outerHeight() > maxHeight) {
+                otherlongText.text(otherlongText.text().replace(/\W*\s(\S)*$/, '...'));
             }
         }
 
@@ -112,7 +119,6 @@ setTimeout(function () {
 profileData(Profile.user);
 
 $("#edit").click(fillPresentDetails(Profile.signedInUser))
-console.log(Profile.signedInUser)
 function fillPresentDetails(data) {
     if (data.firstName != "" && data.firstName != null) {
         $("#fname").val(data.firstName)
@@ -135,7 +141,7 @@ function fillPresentDetails(data) {
         }
     }
 
-    $(".cover-image").attr("src", "data:image/png;base64," + data.profilePic)
+    $(".profile-image").attr("src", "data:image/png;base64," + data.profilePic)
     // $("#picfileInput").val(data.profilePic);
 
 

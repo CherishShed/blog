@@ -14,10 +14,6 @@ AOS.init({
     delay: 0
 });
 
-
-var profileUrl = window.location.pathname;
-// 
-
 const Profile = await userController.createPost();
 if (Profile.inSession) {
     $('.logout').css('display', 'flex');
@@ -95,9 +91,6 @@ $("#createForm").submit(function (event) {
                 $(".toast-text").text("An eror occured")
                 $(".toast").css("background-color", "red")
                 $('.toast').toast('show');
-                $('.toast').on('hide.bs.toast', function () {
-                    location.reload();
-                });
             }
         })
         ;
@@ -114,10 +107,14 @@ tags.forEach((tag) => {
 
 $('input[name="tags"]').change(function () {
     // Handle checkbox change event
-    var disableOthers = false;
-    if ($('input[name="tags"]:checked').length >= 3) {
+    if (document.querySelectorAll('input[name="tags"]:checked').length >= 3) {
         document.querySelectorAll('input[name="tags"]:not(:checked)').forEach((box) => {
             box.setAttribute('disabled', true);
         })
+    } else {
+        document.querySelectorAll('input[name="tags"]:not(:checked)').forEach((box) => {
+            box.removeAttribute('disabled');
+        })
     }
+
 });

@@ -26,8 +26,14 @@ const userSchema = new mongoose.Schema({
 })
 
 const postSchema = new mongoose.Schema({
-    title: String,
-    description: String,
+    title: {
+        type: String,
+        required: true
+    },
+    description: {
+        type: String,
+        required: true
+    },
     coverImage: String,
     author: {
         type: mongoose.Schema.Types.ObjectId,
