@@ -7,6 +7,7 @@ const cheerio = require("cheerio");
 const database = require("./Models/database.model");
 const upload = multer({ dest: "uploads/" })
 const userController = require("./Controllers/user.Controller")
+const postController = require("./Controllers/post.Controller")
 const User = database.User;
 const Post = database.Post;
 const Review = database.Review;
@@ -32,32 +33,6 @@ app.get("/", (req, res) => {
             }
             );
     }
-})
-
-app.get("/api/getallPosts", (req, res) => {
-    var inSession = false
-    if (req.isAuthenticated()) {
-
-        inSession = true
-    }
-    var signedInUser = false
-
-    Post.find({})
-        .populate('author', 'firstName lastName profileUrl')
-        .then((data) => {
-            if (req.isAuthenticated()) {
-                inSession = true
-                User.findById(req.user._id)
-                    .then((user) => {
-                        console.log(user);
-                        signedInUser = user;
-                        res.json({ data, inSession, signedInUser });
-                    })
-            } else {
-                res.json({ data, inSession, signedInUser });
-            }
-        })
-
 })
 
 app.get('/auth/google', (req, res, next) => {
@@ -100,45 +75,11 @@ app.get("/signup", (req, res) => {
     }
 })
 
-app.get("/posts/:id", (req, res) => {
-    const { id } = req.params
-    Post.findById(id).populate('author', 'firstName lastName profileUrl')
-        .then((data) => {
-            // console.log(data);
-            // data.forEach((post) => {
-            //     post.coverImage.data = post.coverImage.data.toString('base64');
-            // })
-            res.render('blog', { title: data.title });
-        })
-})
-app.get("/api/posts/:id", async (req, res) => {
-    console.log("we ae here now")
-    const { id } = req.params
-    var inSession = false
-    var signedInUser = false
-    if (req.isAuthenticated()) {
-        inSession = true
-        signedInUser = await User.findById(req.user._id);
-    }
-    // console.log(signedInUser)
-    Post.findById(id).populate("author", "firstName  lastName profileUrl")
-        .then((data) => {
-            // console.log(data)
-            // console.log(user);
-            // Extract purified text and formatting metadata
-            const { purifiedText, formatting } = data.content;
+app.get("/api/getallPosts", postController.getAllPosts)
+app.get("/posts/:id", postController.displayPost)
+app.get("/api/posts/:id", postController.getPostById)
 
-            // Generate HTML output based on the formatting metadata
-            const formattedHTML = applyFormatting(purifiedText, formatting)
-
-            User.findById(data.author.id).populate("posts")
-                .then((user) => {
-                    res.json({ data, inSession, author: user, signedInUser, formattedHTML });
-                })
-        })
-})
-
-app.get("/profiledetails", userController.getProfileDetails);
+app.get("/profiledetails", userController.displayOriginalProfileDetails);
 
 
 app.post("/profiledetails", upload.single('profilePic'), userController.editOriginalProfileDetails)

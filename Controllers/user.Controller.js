@@ -3,7 +3,7 @@ const User = database.User;
 const fs = require('fs');
 const Post = database.Post;
 const userController = {
-    getProfileDetails: async (req, res) => {
+    displayOriginalProfileDetails: async (req, res) => {
         console.log("is too empty")
         let user = req.user
         // console.log(user);
