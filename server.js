@@ -3,7 +3,7 @@ const app = require('./Middleware/expressMiddleware');
 const passport = require('./Middleware/authMiddleware');
 const multer = require("multer");
 const database = require("./Models/database.model");
-const upload = multer({ dest: "uploads/" })
+const upload = multer({ dest: "uploads/" });
 const userController = require("./Controllers/user.Controller");
 const postController = require("./Controllers/post.Controller");
 const authController = require("./Controllers/auth.Controller");
@@ -38,12 +38,14 @@ app.get('/auth/google', authController.googleAuth);
 app.get('/auth/google/blog', authController.googleAuthRedirect);
 app.get("/login", authController.displayLogin);
 app.get("/signup", authController.displaySignup);
-app.post("/signup", authController.postSignup)
-app.post("/login", authController.postLogin)
+app.post("/signup", authController.postSignup);
+app.post("/login", authController.postLogin);
+app.get("/logout", authController.logout);
+app.get("/api/reviews", authController.getReviews);
 
 //user APIs
 app.get("/profiledetails", userController.displayOriginalProfileDetails);
-app.post("/profiledetails", upload.single('profilePic'), userController.editOriginalProfileDetails)
+app.post("/profiledetails", upload.single('profilePic'), userController.editOriginalProfileDetails);
 app.post("/editprofiledetails", upload.single('profilePic'), userController.editProfileDetails);
 app.get("/api/getmyprofile", userController.getMyPofile);
 app.get("/profile/:id", userController.displayProfile);
@@ -61,31 +63,10 @@ app.get("/api/tags", postController.getTags);
 app.get("/api/giveApplause", postController.giveApplause);
 
 
-app.get("/api/reviews", (req, res) => {
-    Review.find({})
-        .then((reviews) => {
-            res.json(reviews);
-        })
-})
-app.get("/logout", (req, res) => {
-    req.logOut((err) => {
-        if (err) {
-            console.log(err);
-        }
-        else {
-            res.redirect("/");
-        }
-    });
-})
-
-
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log("listening on port " + PORT);
 })
-
-
-
 
 
 // function populateDb() {

@@ -1,7 +1,9 @@
 require("dotenv").config();
 const passport = require('./Middleware/authMiddleware');
-const multer = require("multer");
 const database = require("./Models/database.model");
+const Review = database.Review;
+const User = database.User;
+
 
 const authController = {
     googleAuth: async (req, res, next) => {
@@ -65,6 +67,23 @@ const authController = {
                 })
             }
         })
+    },
+    logout: async (req, res) => {
+        req.logOut((err) => {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                res.redirect("/");
+            }
+        });
+    },
+
+    getReviews: async (req, res) => {
+        Review.find({})
+            .then((reviews) => {
+                res.json(reviews);
+            })
     }
 }
 
