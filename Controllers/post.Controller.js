@@ -1,6 +1,8 @@
+require("dotenv").config();
 const database = require("../Models/database.model");
 const User = database.User;
 const fs = require('fs');
+const cheerio = require("cheerio");
 const Post = database.Post;
 const Tag = database.Tag;
 const postController = {
@@ -144,9 +146,136 @@ const postController = {
     getTags: async (req, res) => {
         const tags = await Tag.find({});
         res.json(tags);
+    },
+    giveApplause: async (req, res) => {
+        if (req.isAuthenticated()) {
+            try {
+                const user = await User.findById(req.user._id);
+                if (user) {
+                    if (user.applaudedPosts.indexOf(req.query.postId) == -1) {
+                        user.applaudedPosts.push(req.query.postId)
+                        await user.save();
+
+                        try {
+                            const post = await Post.findById(req.query.postId);
+                            if (post) {
+
+                                post.applause += 1;
+                                await post.save()
+                                res.json({ message: "Done adding like" });
+                            }
+                        } catch (err) {
+                            res.status(404).send("Not found")
+                        }
+                    } else {
+                        var newArray = user.applaudedPosts.slice();
+                        newArray.splice(user.applaudedPosts.indexOf(req.query.postId), 1);
+                        user.applaudedPosts = newArray;
+                        user.save();
+                        try {
+                            const post = await Post.findById(req.query.postId);
+                            if (post) {
+                                post.applause -= 1;
+                                await post.save()
+                                res.json({ message: "Done removing like" });
+                            }
+                        } catch (err) {
+                            res.status(404).send("Not found")
+                        }
+                    }
+
+                } else {
+                    res.status(404).send("Not found")
+                }
+            } catch (error) {
+                console.log(error);
+            }
+        } else {
+            res.json({ message: "no user" })
+        }
     }
-
-
 }
+
+function extractFormattingMetadata(htmlContent) {
+    const formatting = {
+        bold: [],
+        italics: [],
+        headers: []
+    };
+
+    // Load the HTML content using cheerio
+    const $ = cheerio.load(htmlContent);
+
+    // Extract bold formatting
+    $('strong, b').each((index, element) => {
+        const startIndex = $(element).text().indexOf($(element).html());
+        const endIndex = startIndex + $(element).html().length - 1;
+        formatting.bold.push({ startIndex, endIndex });
+    });
+
+    // Extract italics formatting
+    $('em, i').each((index, element) => {
+        const startIndex = $(element).text().indexOf($(element).html());
+        const endIndex = startIndex + $(element).html().length - 1;
+        formatting.italics.push({ startIndex, endIndex });
+    });
+
+    // Extract header formatting
+    $('h1, h2, h3, h4, h5, h6').each((index, element) => {
+        const headerLevel = parseInt($(element).prop('tagName').substring(1));
+        const startIndex = $(element).text().indexOf($(element).html());
+        const endIndex = startIndex + $(element).html().length - 1;
+        formatting.headers.push({ level: headerLevel, startIndex, endIndex });
+    });
+
+    return formatting;
+}
+
+// Function to generate formatted HTML using the purified text and formatting metadata
+function applyFormatting(purifiedText, formatting) {
+    let formattedText = purifiedText;
+
+    // Apply bold formatting
+    formatting.bold.forEach(({ startIndex, endIndex }) => {
+        formattedText = formattedText.slice(0, startIndex) + '<strong>' + formattedText.slice(startIndex, endIndex + 1) + '</strong>' + formattedText.slice(endIndex + 1);
+    });
+
+    // Apply italics formatting
+    formatting.italics.forEach(({ startIndex, endIndex }) => {
+        formattedText = formattedText.slice(0, startIndex) + '<em>' + formattedText.slice(startIndex, endIndex + 1) + '</em>' + formattedText.slice(endIndex + 1);
+    });
+
+    // Apply header formatting
+    formatting.headers.forEach(({ level, startIndex, endIndex }) => {
+        const headerTag = 'h' + level;
+        formattedText = formattedText.slice(0, startIndex) + '<' + headerTag + '>' + formattedText.slice(startIndex, endIndex + 1) + '</' + headerTag + '>' + formattedText.slice(endIndex + 1);
+    });
+
+    return formattedText;
+}
+
+function cleanseHTML(html) {
+    const $ = cheerio.load(html);
+
+    // Remove unwanted tags
+    $('body')
+        .find(':not(strong, b, em, i, h1, h2, h3, h4, h5, h6, p)')
+        .each((index, element) => {
+            $(element).replaceWith($(element).html());
+        });
+
+    // Remove unwanted attributes
+    $('*').each((index, element) => {
+        const attributes = $(element)[0].attribs;
+        Object.keys(attributes).forEach((attr) => {
+            if (!['src', 'href', 'alt'].includes(attr)) {
+                $(element).removeAttr(attr);
+            }
+        });
+    });
+
+    return $.html();
+}
+
 
 module.exports = postController; 

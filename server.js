@@ -1,13 +1,12 @@
 require("dotenv").config();
 const app = require('./Middleware/expressMiddleware');
-const fs = require('fs');
 const passport = require('./Middleware/authMiddleware');
 const multer = require("multer");
-const cheerio = require("cheerio");
 const database = require("./Models/database.model");
 const upload = multer({ dest: "uploads/" })
-const userController = require("./Controllers/user.Controller")
-const postController = require("./Controllers/post.Controller")
+const userController = require("./Controllers/user.Controller");
+const postController = require("./Controllers/post.Controller");
+const authController = require("./Controllers/auth.Controller");
 const User = database.User;
 const Post = database.Post;
 const Review = database.Review;
@@ -34,45 +33,13 @@ app.get("/", (req, res) => {
     }
 })
 
-app.get('/auth/google', (req, res, next) => {
-    passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
-});
-app.get('/auth/google/blog', passport.authenticate('google', {
-    successRedirect: '/',
-    failureRedirect: '/login'
-}));
-
-
-app.get("/login", (req, res) => {
-    // populateDb();
-    console.log("in login")
-    req.session.previousUrl = req.headers.referer || '/';
-    const previousUrl = req.session.previousUrl;
-
-    if (req.isAuthenticated()) {
-
-        User.findById(req.user.id)
-            .then((user) => {
-                if (user.firstName === "" || user.lastName === "" || (user.profilePic != "" && user.googleProfilePic != "")) {
-                    res.redirect("/profiledetails");
-                } else {
-                    res.redirect(req.session.previousUrl)
-                }
-                // console.log(user);
-            })
-    } else {
-        res.render("login");
-    }
-})
-
-app.get("/signup", (req, res) => {
-    if (req.isAuthenticated()) {
-        // console.log(req.user)
-        res.redirect("/profiledetails");
-    } else {
-        res.render("signup");
-    }
-})
+//Authentication APIs
+app.get('/auth/google', authController.googleAuth);
+app.get('/auth/google/blog', authController.googleAuthRedirect);
+app.get("/login", authController.displayLogin);
+app.get("/signup", authController.displaySignup);
+app.post("/signup", authController.postSignup)
+app.post("/login", authController.postLogin)
 
 //user APIs
 app.get("/profiledetails", userController.displayOriginalProfileDetails);
@@ -91,38 +58,8 @@ app.get("/posts/:id", postController.displayPost);
 app.get("/api/posts/:id", postController.getPostById);
 app.get("/api/recentposts", postController.getRecentPosts);
 app.get("/api/tags", postController.getTags);
-app.post("/signup", (req, res) => {
-    User.register({ username: req.body.username.toLowerCase() }, req.body.password, (err, foundUser) => {
-        if (err) {
-            console.log(err);
-            res.redirect("/signup");
-        } else {
-            passport.authenticate("local")(req, res, () => {
-                res.redirect("/profiledetails")
-            });
-        }
-    })
+app.get("/api/giveApplause", postController.giveApplause);
 
-})
-
-app.post("/login", (req, res) => {
-    const user = new User({
-        username: req.body.username,
-        password: req.body.password
-    });
-    const previousUrl = req.session.previousUrl || "/"
-    req.logIn(user, (err) => {
-        if (err) {
-            console.log(err);
-            res.redirect("/login")
-        } else {
-            passport.authenticate("local")(req, res, () => {
-                req.session.previousUrl = previousUrl;
-                res.redirect("/profiledetails")
-            })
-        }
-    })
-})
 
 app.get("/api/reviews", (req, res) => {
     Review.find({})
@@ -141,53 +78,7 @@ app.get("/logout", (req, res) => {
     });
 })
 
-app.get("/api/giveApplause", async (req, res) => {
-    if (req.isAuthenticated()) {
-        try {
-            const user = await User.findById(req.user._id);
-            if (user) {
-                if (user.applaudedPosts.indexOf(req.query.postId) == -1) {
-                    user.applaudedPosts.push(req.query.postId)
-                    await user.save();
 
-                    try {
-                        const post = await Post.findById(req.query.postId);
-                        if (post) {
-
-                            post.applause += 1;
-                            await post.save()
-                            res.json({ message: "Done adding like" });
-                        }
-                    } catch (err) {
-                        res.status(404).send("Not found")
-                    }
-                } else {
-                    var newArray = user.applaudedPosts.slice();
-                    newArray.splice(user.applaudedPosts.indexOf(req.query.postId), 1);
-                    user.applaudedPosts = newArray;
-                    user.save();
-                    try {
-                        const post = await Post.findById(req.query.postId);
-                        if (post) {
-                            post.applause -= 1;
-                            await post.save()
-                            res.json({ message: "Done removing like" });
-                        }
-                    } catch (err) {
-                        res.status(404).send("Not found")
-                    }
-                }
-
-            } else {
-                res.status(404).send("Not found")
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    } else {
-        res.json({ message: "no user" })
-    }
-})
 var PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log("listening on port " + PORT);
@@ -228,137 +119,4 @@ app.listen(PORT, () => {
 //     })
 
 // }
-
-// Function to extract formatting metadata from the HTML content
-// Function to extract formatting metadata from the HTML content
-
-// Function to extract formatting metadata from the HTML content
-function extractFormattingMetadata(htmlContent) {
-    const formatting = {
-        bold: [],
-        italics: [],
-        headers: []
-    };
-
-    // Load the HTML content using cheerio
-    const $ = cheerio.load(htmlContent);
-
-    // Extract bold formatting
-    $('strong, b').each((index, element) => {
-        const startIndex = $(element).text().indexOf($(element).html());
-        const endIndex = startIndex + $(element).html().length - 1;
-        formatting.bold.push({ startIndex, endIndex });
-    });
-
-    // Extract italics formatting
-    $('em, i').each((index, element) => {
-        const startIndex = $(element).text().indexOf($(element).html());
-        const endIndex = startIndex + $(element).html().length - 1;
-        formatting.italics.push({ startIndex, endIndex });
-    });
-
-    // Extract header formatting
-    $('h1, h2, h3, h4, h5, h6').each((index, element) => {
-        const headerLevel = parseInt($(element).prop('tagName').substring(1));
-        const startIndex = $(element).text().indexOf($(element).html());
-        const endIndex = startIndex + $(element).html().length - 1;
-        formatting.headers.push({ level: headerLevel, startIndex, endIndex });
-    });
-
-    return formatting;
-}
-
-// Function to generate formatted HTML using the purified text and formatting metadata
-function applyFormatting(purifiedText, formatting) {
-    let formattedText = purifiedText;
-
-    // Apply bold formatting
-    formatting.bold.forEach(({ startIndex, endIndex }) => {
-        formattedText = formattedText.slice(0, startIndex) + '<strong>' + formattedText.slice(startIndex, endIndex + 1) + '</strong>' + formattedText.slice(endIndex + 1);
-    });
-
-    // Apply italics formatting
-    formatting.italics.forEach(({ startIndex, endIndex }) => {
-        formattedText = formattedText.slice(0, startIndex) + '<em>' + formattedText.slice(startIndex, endIndex + 1) + '</em>' + formattedText.slice(endIndex + 1);
-    });
-
-    // Apply header formatting
-    formatting.headers.forEach(({ level, startIndex, endIndex }) => {
-        const headerTag = 'h' + level;
-        formattedText = formattedText.slice(0, startIndex) + '<' + headerTag + '>' + formattedText.slice(startIndex, endIndex + 1) + '</' + headerTag + '>' + formattedText.slice(endIndex + 1);
-    });
-
-    return formattedText;
-}
-
-function cleanseHTML(html) {
-    const $ = cheerio.load(html);
-
-    // Remove unwanted tags
-    $('body')
-        .find(':not(strong, b, em, i, h1, h2, h3, h4, h5, h6, p)')
-        .each((index, element) => {
-            $(element).replaceWith($(element).html());
-        });
-
-    // Remove unwanted attributes
-    $('*').each((index, element) => {
-        const attributes = $(element)[0].attribs;
-        Object.keys(attributes).forEach((attr) => {
-            if (!['src', 'href', 'alt'].includes(attr)) {
-                $(element).removeAttr(attr);
-            }
-        });
-    });
-
-    return $.html();
-}
-
-
-
-// Function to extract formatting metadata from the HTML content
-function extractFormattingMetadata(htmlContent) {
-    const formatting = {
-        bold: [],
-        italics: [],
-        headers: []
-    };
-
-    // Load the HTML content using cheerio
-    const $ = cheerio.load(htmlContent);
-
-    // Extract bold formatting
-    $('strong, b').each((index, element) => {
-        const startIndex = $(element).text().indexOf($(element).html());
-        const endIndex = startIndex + $(element).html().length - 1;
-        formatting.bold.push({ startIndex, endIndex });
-    });
-
-    // Extract italics formatting
-    $('em, i').each((index, element) => {
-        const startIndex = $(element).text().indexOf($(element).html());
-        const endIndex = startIndex + $(element).html().length - 1;
-        formatting.italics.push({ startIndex, endIndex });
-    });
-
-    // Extract header formatting
-    $('h1, h2, h3, h4, h5, h6').each((index, element) => {
-        const headerLevel = parseInt($(element).prop('tagName').substring(1));
-        const startIndex = $(element).text().indexOf($(element).html());
-        const endIndex = startIndex + $(element).html().length - 1;
-        formatting.headers.push({ level: headerLevel, startIndex, endIndex });
-    });
-
-    return formatting;
-}
-
-
-// Example usage
-const htmlContent = '<p>This is <strong>bold</strong> and <em>italics</em> text. <h2>Header 2</h2></p>';
-
-const formatting = extractFormattingMetadata(htmlContent);
-console.log(formatting);
-
-const purifiedText = cheerio.load(htmlContent).text();
-console.log(purifiedText);
 

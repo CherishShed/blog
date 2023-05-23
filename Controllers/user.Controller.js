@@ -1,16 +1,14 @@
+require("dotenv").config();
 const database = require("../Models/database.model");
 const User = database.User;
 const fs = require('fs');
-const Post = database.Post;
 const userController = {
     displayOriginalProfileDetails: async (req, res) => {
-        console.log("is too empty")
-        let user = req.user
+        let user = req.user;
         // console.log(user);
         if (user.firstName != '' && user.lastName != '' && (user.profilePic != '' || user.googleProfilePic != '')) {
-            const previousUrl = req.session.previousUrl || "/"
-            console.log(previousUrl);
-            res.redirect(previousUrl)
+            const previousUrl = req.session.previousUrl || "/";
+            res.redirect(previousUrl);
         } else {
             res.render("details");
         }
