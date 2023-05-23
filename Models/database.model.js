@@ -7,15 +7,15 @@ mongoose.connect("mongodb://127.0.0.1:27017/blogDB");
 const userSchema = new mongoose.Schema({
     username: String,
     password: String,
-    firstName: String,
-    lastName: String,
+    firstName: { type: String, default: "" },
+    lastName: { type: String, default: "" },
     posts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "blogPost"
     }],
     googleId: String,
-    googleProfilePic: String,
-    profilePic: String,
+    googleProfilePic: { type: String, default: "" },
+    profilePic: { type: String, default: "" },
     profileUrl: String,
     socials: { linkedin: String, facebook: String, twitter: String, instagram: String },
     about: String,

@@ -6,8 +6,7 @@ const multer = require("multer");
 const cheerio = require("cheerio");
 const database = require("./Models/database.model");
 const upload = multer({ dest: "uploads/" })
-
-
+const userController = require("./Controllers/user.Controller")
 const User = database.User;
 const Post = database.Post;
 const Review = database.Review;
@@ -80,7 +79,7 @@ app.get("/login", (req, res) => {
 
         User.findById(req.user.id)
             .then((user) => {
-                if (user.firstName === null || user.lastName === null || (user.profilePic != null && user.googleProfilePic != null)) {
+                if (user.firstName === "" || user.lastName === "" || (user.profilePic != "" && user.googleProfilePic != "")) {
                     res.redirect("/profiledetails");
                 } else {
                     res.redirect(req.session.previousUrl)
@@ -139,94 +138,19 @@ app.get("/api/posts/:id", async (req, res) => {
         })
 })
 
-app.get("/profiledetails", (req, res) => {
-    let user = req.user
-    // console.log(user);
-    if (user.firstName != null && user.lastName != null && (user.profilePic != null || user.googleProfilePic != null)) {
-        res.redirect("/")
-    } else {
-        res.render("details");
-    }
-})
+app.get("/profiledetails", userController.getProfileDetails);
 
 
-app.post("/profiledetails", upload.single('profilePic'), (req, res) => {
-    // console.log("i am trying")
+app.post("/profiledetails", upload.single('profilePic'), userController.editOriginalProfileDetails)
 
-    // if(req.file)
-    if (req.file) {
-        var profilePic = fs.readFileSync(req.file.path);
-    } else {
-        var profilePic = fs.readFileSync("./public/Images/avatar.png");
-
-    }
-
-    profilePic = profilePic.toString("base64");
-    User.findByIdAndUpdate(req.user._id, { $set: { profilePic: profilePic, firstName: toTitleCase(req.body.fname), lastName: toTitleCase(req.body.lname), username: req.body.email, profileUrl: `profile/${req.user._id}` } })
-        .then(() => {
-            if (fs.existsSync(req.file.path)) {
-                fs.unlink(req.file.path, (err) => {
-                    if (err) throw err;
-                });
-            }
-            res.redirect('/');
-        })
-
-})
-
-app.post("/editprofiledetails", upload.single('profilePic'), async (req, res) => {
-    console.log("i am trying to update")
-
-    // if(req.file)
-    if (req.isAuthenticated()) {
-        const user = await User.findById(req.user._id);
-        const formData = req.body;
-        if (req.file) {
-            user.profilePic = fs.readFileSync(req.file.path, 'base64');
-        }
-        if (formData.fname) {
-            user.firstName = toTitleCase(formData.fname);
-        }
-        if (formData.lname) {
-            user.lastName = toTitleCase(formData.lname);
-        }
-        if (formData.about) {
-            user.about = formData.about;
-        }
-        var socials = ["linkedin", "twitter", "facebook", "instagram"]
-        socials.forEach((media) => {
-            if (formData[media]) {
-                user.socials[media] = formData[media];
-            }
-        })
-
-        user.save()
-            .then((result) => {
-                console.log("it is done")
-                console.log(result)
-                res.json({ status: true })
-            })
-            .catch((error) => {
-                res.json({ status: false })
-            })
-
-    } else {
-        res.redirect("/login")
-    }
-})
+app.post("/editprofiledetails", upload.single('profilePic'), userController.editProfileDetails);
 
 
-app.get("/api/getmyprofile", async (req, res) => {
-    if (req.isAuthenticated()) {
-        console.log("here");
-        let user = await User.findById(req.user._id);
-        res.json(user);
-
-    } else {
-        res.redirect("/login")
-    }
-
-})
+app.get("/api/getmyprofile", userController.getMyPofile);
+app.get("/profile/:id", (req, res) => {
+    res.render("profile");
+});
+app.get("/api/profile/:id", userController.getPofileById);
 
 app.get("/api/recentposts", async (req, res) => {
     let posts = await Post.find({}).populate("author", "firstName lastName profileUrl").sort({ createdAt: 'desc' });
@@ -235,24 +159,7 @@ app.get("/api/recentposts", async (req, res) => {
     res.json(shownRecentPosts);
 
 })
-app.get("/profile/:id", (req, res) => {
-    res.render("profile");
-})
-app.get("/api/profile/:id", async (req, res) => {
-    const { id } = req.params
-    var signedInUser = false
-    var inSession = false
-    if (req.isAuthenticated()) {
-        signedInUser = await User.findById(req.user._id);
-        console.log(signedInUser.name)
-        inSession = true
-    }
-    User.findById(id).populate("posts")
-        .then(user => {
-            user.name = (user.name)
-            res.json({ user, signedInUser, inSession });
-        })
-})
+
 app.post("/signup", (req, res) => {
     User.register({ username: req.body.username.toLowerCase() }, req.body.password, (err, foundUser) => {
         if (err) {
@@ -279,8 +186,8 @@ app.post("/login", (req, res) => {
             res.redirect("/login")
         } else {
             passport.authenticate("local")(req, res, () => {
-                // console.log(previousUrl)
-                res.redirect(previousUrl);
+                req.session.previousUrl = previousUrl;
+                res.redirect("/profiledetails")
             })
         }
     })
@@ -428,11 +335,7 @@ app.listen(PORT, () => {
 
 
 
-function toTitleCase(str) {
-    return str.replace(/\w\S*/g, function (txt) {
-        return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-    });
-}
+
 // function populateDb() {
 //     const tags = [
 //         'Technology',

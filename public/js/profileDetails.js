@@ -18,12 +18,12 @@ function fillPresentDetails(data) {
         $("#emailaddress").val(data.username)
     }
 
-    if ((data.profilePic) != null) {
+    if ((data.profilePic) != "") {
         console.log(typeof (data.profilePic));
         $(".profile-image").attr("src", "data:image/png;base64," + data.profilePic)
         $("#picfileInput").val(data.profilePic);
         console.log($("#picfileInput").val())
-    } else if (data.googleProfilePic) {
+    } else if (data.googleProfilePic != "") {
         $(".profile-image").attr("src", data.googleProfilePic)
         $("#picfileinput").val(data.googleProfilePicture);
         console.log($("#picfileInput").val())
