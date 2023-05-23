@@ -1,7 +1,5 @@
 import postController from "./postController.js";
 var postUrl = window.location.pathname;
-console.log("api" + postUrl);
-console.log(window.location)
 
 postController.fetchPostById("api" + postUrl)
     .then((post) => {
@@ -32,8 +30,6 @@ postController.fetchPostById("api" + postUrl)
         console.log("we are here");
         let openPost = post.data;
         let openPostContent = post.formattedHTML;
-        console.log(openPost)
-        console.log(openPostContent);
         $("#applause").data("postid", openPost._id);
         $("#applause-count").text(openPost.applause);
         if (post.signedInUser.applaudedPosts.indexOf(openPost._id) != -1) {
@@ -44,7 +40,6 @@ postController.fetchPostById("api" + postUrl)
         $("#open-post-description").text(openPost.description);
         $("#open-post-author").text(openPost.author.name);
         $("#open-post-author").attr("href", "/" + post.author.profileUrl);
-        console.log(post.author.profileUrl)
         $("#open-post-content ").html(openPostContent);
 
         //other posts by author
@@ -61,7 +56,7 @@ postController.fetchPostById("api" + postUrl)
             $("#author-pic").attr('src', profilePicture)
         }
         $("#profile-name").text(post.signedInUser.firstName);
-        console.log(authorOtherPosts);
+
         authorOtherPosts.forEach((post) => {
             let blogDetails = $("<div></div>");
             $(blogDetails).addClass("blog-details")
@@ -108,13 +103,8 @@ postController.fetchPostById("api" + postUrl)
 
             const longText = $(blogDescription);
             const maxHeight = 80; // Adjust this value to match the desired height
-            console.log(longText.outerHeight())
-
-
             if (longText.outerHeight() > maxHeight) {
-                console.log("greater than max height")
                 while (longText.outerHeight() > maxHeight) {
-                    console.log("still here")
                     longText.text(longText.text().replace(/\W*\s(\S)*$/, '...'));
                 }
             }
@@ -127,13 +117,12 @@ setTimeout(function () {
 }, 3000)
 
 $("#applause").click(function () {
-    console.log("i no sabi")
+
     const postId = $(this).data("postid");
     fetch(`/api/giveApplause?postId=${postId}`)
         .then(response => response.json())
         .then(data => {
             if (data.message == "no user") {
-                console.log("No user found")
                 document.querySelector('.get-started').click()
             } else {
                 $("#applause").toggleClass("done-action");
@@ -141,12 +130,10 @@ $("#applause").click(function () {
                     let currentLike = parseInt($("#applause-count").text());
                     currentLike += 1;
                     $("#applause-count").text(currentLike)
-                    console.log(currentLike)
                 } else {
                     let currentLike = parseInt($("#applause-count").text());
                     currentLike -= 1;
                     $("#applause-count").text(currentLike)
-                    console.log(currentLike)
                 }
 
             }
@@ -154,15 +141,3 @@ $("#applause").click(function () {
         })
         ;
 })
-// if () {
-//     console.log("runnng");
-//     $("#modelId").modal("hide");
-//     $(".toast-text").text("Edited successfully")
-//     $(".toast-header").text("Succcess");
-//     $('.toast').toast({ delay: 2000 });
-//     $(".toast").css("background-color", "green")
-//     $('.toast').toast('show');
-//     $('.toast').on('hide.bs.toast', function () {
-//         location.reload();
-//     })
-// }

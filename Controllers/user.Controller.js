@@ -5,7 +5,6 @@ const fs = require('fs');
 const userController = {
     displayOriginalProfileDetails: async (req, res) => {
         let user = req.user;
-        // console.log(user);
         if (user.firstName != '' && user.lastName != '' && (user.profilePic != '' || user.googleProfilePic != '')) {
             const previousUrl = req.session.previousUrl || "/";
             res.redirect(previousUrl);
@@ -15,9 +14,6 @@ const userController = {
     },
 
     editOriginalProfileDetails: async (req, res) => {
-        // console.log("i am trying")
-
-        // if(req.file)
         if (req.file) {
             var profilePic = fs.readFileSync(req.file.path);
         } else {
@@ -44,9 +40,7 @@ const userController = {
     },
 
     editProfileDetails: async (req, res) => {
-        console.log("i am trying to update")
 
-        // if(req.file)
         if (req.isAuthenticated()) {
             const user = await User.findById(req.user._id);
             const formData = req.body;
@@ -71,8 +65,6 @@ const userController = {
 
             user.save()
                 .then((result) => {
-                    console.log("it is done")
-                    console.log(result)
                     res.json({ status: true })
                 })
                 .catch((error) => {
@@ -87,7 +79,6 @@ const userController = {
 
     getMyPofile: async (req, res) => {
         if (req.isAuthenticated()) {
-            console.log("here");
             let user = await User.findById(req.user._id);
             res.json(user);
 
@@ -103,7 +94,6 @@ const userController = {
         var inSession = false
         if (req.isAuthenticated()) {
             signedInUser = await User.findById(req.user._id);
-            console.log(signedInUser.name)
             inSession = true
         }
         User.findById(id).populate("posts")

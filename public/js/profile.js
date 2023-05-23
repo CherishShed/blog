@@ -1,9 +1,7 @@
 import userController from "./userCotroller.js";
 var profileUrl = window.location.pathname;
-// console.log(window.location);
-
+// 
 const Profile = await userController.fetchUserProfile("api" + profileUrl);
-// console.log(Profile);
 if (Profile.inSession) {
     $('.logout').css('display', 'flex');
 } else {
@@ -22,15 +20,14 @@ if (Profile.signedInUser) {
         $("#profile-pic").attr('src', profilePicture)
     }
     $("#profile-name").text(Profile.signedInUser.firstName);
-    console.log(Profile.signedInUser.name)
+
 
 
 }
 function profileData(profile) {
-    console.log(profile);
 
     if (Profile.signedInUser._id === profile._id) {
-        console.log("it is")
+
         $(".edit").css("display", "block");
     }
     document.title = `${profile.firstName} ${profile.lastName}`;
@@ -38,7 +35,7 @@ function profileData(profile) {
     $("#profile-owner-name").text(profile.name);
     $("#about").text(profile.about);
     for (var i in profile.socials) {
-        console.log(profile.socials[i]);
+
         if (profile.socials[i] != null) {
             let socialText = $("<i></i>");
             let socialLink = $("<a></a>");
@@ -65,7 +62,7 @@ function profileData(profile) {
         let blogDate = $("<span></span>").text(new Date(post.createdAt).toDateString());
         $(blogOwnerDets).addClass("blog-date");
         let blogAuthor = $("<span></span>").text(post.author.name);
-        console.log(post.author.name)
+
         $(blogAuthor).addClass("blog-author");
         $(blogOwnerDets).append(blogDate, blogAuthor);
         $(blogImage).append(overlay, blogImageImg, blogOwnerDets);
@@ -97,13 +94,11 @@ function profileData(profile) {
 
         const longText = $(blogDescription);
         const maxHeight = 80; // Adjust this value to match the desired height
-        console.log(longText.outerHeight())
 
 
         if (longText.outerHeight() > maxHeight) {
-            console.log("greater than max height")
             while (longText.outerHeight() > maxHeight) {
-                console.log("still here")
+
                 longText.text(longText.text().replace(/\W*\s(\S)*$/, '...'));
             }
         }
@@ -116,10 +111,9 @@ setTimeout(function () {
 }, 2000)
 profileData(Profile.user);
 
-
-
+$("#edit").click(fillPresentDetails(Profile.signedInUser))
+console.log(Profile.signedInUser)
 function fillPresentDetails(data) {
-    console.log(data)
     if (data.firstName != "" && data.firstName != null) {
         $("#fname").val(data.firstName)
     }
@@ -130,30 +124,35 @@ function fillPresentDetails(data) {
         $("#emailaddress").prop("disabled", true)
         $("#emailaddress").val(data.username)
     }
+    if (data.about != null && data.about != "") {
+        $("#aboutYou").val(data.about)
+    }
+    if (data.socials != null && data.socials != "") {
+        for (var i in data.socials) {
+            if (data.socials[i] != null) {
+                $(`#${i}`).val(data.socials[i]);
+            }
+        }
+    }
 
     $(".cover-image").attr("src", "data:image/png;base64," + data.profilePic)
     // $("#picfileInput").val(data.profilePic);
-    console.log($("#picfileInput").val())
+
 
 }
 
 $("#picfileInput").change(function (event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function () {
-        $(".profile-image").attr("src", reader.result);
+    if (event.target.files.length > 0) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function () {
+            $(".profile-image").attr("src", reader.result);
+        }
+
+        reader.readAsDataURL(file);
     }
-
-    reader.readAsDataURL(file);
 })
 
-$(".edit").click(function () {
-    userController.getMyProfile()
-        .then((data) => {
-            console.log(data);
-            fillPresentDetails(data);
-        })
-})
 
 $(".submit").click(function () {
     $("#editForm").submit()
@@ -162,7 +161,6 @@ $(".submit").click(function () {
 $("#editForm").submit(function (event) {
     // Prepare the form data
     event.preventDefault();
-    console.log("goingggg")
     const formData = new FormData(this);
 
     // Perform the POST request
@@ -172,9 +170,7 @@ $("#editForm").submit(function (event) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log("hereeeee")
             if (data.status) {
-                console.log("runnng");
                 $("#modelId").modal("hide");
                 $(".toast-text").text("Edited successfully")
                 $(".toast-header").text("Succcess");
@@ -185,7 +181,7 @@ $("#editForm").submit(function (event) {
                     location.reload();
                 });
             } else {
-                console.log("runnng not")
+
                 $("#modelId").modal("hide");
                 $('.toast').toast({ delay: 2000 })
                 $(".toast-header").text("Failed");

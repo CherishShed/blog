@@ -24,7 +24,7 @@ body{
     min-height: 100%;
     background-color: white;
     animation-name: load;
-    animation-duration: 7s;
+    animation-duration: 8s;
     animation-iteration-count: infinite;
     animation-timing-function: ease-in-out;
 

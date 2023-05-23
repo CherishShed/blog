@@ -8,10 +8,10 @@ AOS.init({
     delay: 0
 });
 
-function setMainHighlight() {
+async function setMainHighlight() {
     postController.fetchAllPosts()
         .then((result) => {
-            // console.log(result)
+
             if (result.inSession) {
                 $('.logout').css('display', 'flex');
             } else {
@@ -21,9 +21,8 @@ function setMainHighlight() {
 
             }
             if (result.signedInUser) {
-                console.log(result.signedInUser);
+
                 if (result.signedInUser.profilePic != null) {
-                    console.log("in here")
                     var profilePicture = result.signedInUser.profilePic;
                     $("#profile-pic").attr('src', "data:image/png;base64," + profilePicture)
                 }
@@ -33,14 +32,14 @@ function setMainHighlight() {
                     $("#profile-pic").attr('src', profilePicture)
                 }
 
-                // console.log(result.signedInUser);
+
                 $("#profile-name").text(result.signedInUser.firstName);
                 $(".myProfile").attr("href", result.signedInUser.profileUrl)
 
 
             }
             let mainBlog = result.data[0];
-            console.log(mainBlog)
+
             $("#main-highlight-image img").attr('src', "data:image/png;base64," + mainBlog.coverImage);
             $("#main-highlight-date").text(new Date(mainBlog.createdAt).toDateString());
             $("#main-highlight-blog-author").text(mainBlog.author.name);
@@ -56,7 +55,7 @@ function setMainHighlight() {
 
             //other Highlights creation
             result.data.slice(1, 4).forEach((post) => {
-                console.log(post);
+
                 let blogDetails = $("<div></div>");
                 $(blogDetails).addClass("blog-details")
                 let blogImage = $("<div></div>");
@@ -96,14 +95,9 @@ function setMainHighlight() {
 
                 $(".other-highlights").append(blogDetails);
                 const longText = $(blogDescription);
-                const maxHeight = 65; // Adjust this value to match the desired height
-                console.log(longText.outerHeight())
-
-
+                const maxHeight = 65;
                 if (longText.outerHeight() > maxHeight) {
-                    console.log("greater than max height")
                     while (longText.outerHeight() > maxHeight) {
-                        console.log("still here")
                         longText.text(longText.text().replace(/\W*\s(\S)*$/, '...'));
                     }
                 }
@@ -117,7 +111,6 @@ function setMainHighlight() {
 async function recentPosts() {
     //Recent Posts
     const RecentPosts = await postController.fetchRecentPosts();
-    console.log(RecentPosts);
     RecentPosts.forEach((post) => {
         let blogDetails = $("<div></div>");
         $(blogDetails).addClass("blog-details")
@@ -163,13 +156,11 @@ async function recentPosts() {
 
         const longText = $(blogDescription);
         const maxHeight = 70; // Adjust this value to match the desired height
-        console.log(longText.outerHeight())
 
 
         if (longText.outerHeight() > maxHeight) {
-            console.log("greater than max height")
+
             while (longText.outerHeight() > maxHeight) {
-                console.log("still here")
                 longText.text(longText.text().replace(/\W*\s(\S)*$/, '...'));
             }
         }
@@ -188,12 +179,12 @@ async function recentPosts() {
 //         })
 // }
 
-setTimeout(function () {
-    $(".preloader").fadeOut(300);
-}, 4000)
 
-window.onload = function () {
-    setMainHighlight();
-    recentPosts();
+window.onload = async function () {
+    await setMainHighlight();
+    await recentPosts();
+    setTimeout(function () {
+        $(".preloader").fadeOut(300);
+    }, 1000)
     // otherHighlights();
 };

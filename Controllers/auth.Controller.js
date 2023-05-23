@@ -15,13 +15,12 @@ const authController = {
     }),
     displayLogin: async (req, res) => {
         // populateDb();
-        console.log("in login")
         req.session.previousUrl = req.headers.referer || '/';
         const previousUrl = req.session.previousUrl;
 
         if (req.isAuthenticated()) {
             req.session.previousUrl = previousUrl;
-            res.redirect("/profiledetails")   // console.log(user);
+            res.redirect("/profiledetails")
         } else {
             res.render("login");
         }

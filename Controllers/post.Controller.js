@@ -21,7 +21,6 @@ const postController = {
                     inSession = true
                     User.findById(req.user._id)
                         .then((user) => {
-                            console.log(user);
                             signedInUser = user;
                             res.json({ data, inSession, signedInUser });
                         })
@@ -35,15 +34,10 @@ const postController = {
         const { id } = req.params
         Post.findById(id).populate('author', 'firstName lastName profileUrl')
             .then((data) => {
-                // console.log(data);
-                // data.forEach((post) => {
-                //     post.coverImage.data = post.coverImage.data.toString('base64');
-                // })
                 res.render('blog', { title: data.title });
             })
     },
     getPostById: async (req, res) => {
-        console.log("we ae here now")
         const { id } = req.params
         var inSession = false
         var signedInUser = false
@@ -51,15 +45,9 @@ const postController = {
             inSession = true
             signedInUser = await User.findById(req.user._id);
         }
-        // console.log(signedInUser)
         Post.findById(id).populate("author", "firstName  lastName profileUrl")
             .then((data) => {
-                // console.log(data)
-                // console.log(user);
-                // Extract purified text and formatting metadata
                 const { purifiedText, formatting } = data.content;
-
-                // Generate HTML output based on the formatting metadata
                 const formattedHTML = applyFormatting(purifiedText, formatting)
 
                 User.findById(data.author.id).populate("posts")
@@ -71,7 +59,6 @@ const postController = {
 
     getRecentPosts: async (req, res) => {
         let posts = await Post.find({}).populate("author", "firstName lastName profileUrl").sort({ createdAt: 'desc' });
-        // console.log(posts);
         const shownRecentPosts = posts.slice(0, 7);
         res.json(shownRecentPosts);
 
@@ -99,7 +86,6 @@ const postController = {
             const user = await User.findById(req.user._id);
             var htmlContent = req.body.content
             console.log(htmlContent);
-            // Create a new document in MongoDB
             const $ = cheerio.load(htmlContent);
             const purifiedText = cleanseHTML(htmlContent);
             const formatting = extractFormattingMetadata($);
@@ -130,7 +116,6 @@ const postController = {
                     newPost.save();
                     user.posts.push(result._id);
                     user.save();
-                    console.log(result);
                     res.json({ status: true })
                 })
                 .catch((error) => {

@@ -16,10 +16,9 @@ AOS.init({
 
 
 var profileUrl = window.location.pathname;
-// console.log(window.location);
+// 
 
 const Profile = await userController.createPost();
-console.log(Profile);
 if (Profile.inSession) {
     $('.logout').css('display', 'flex');
 } else {
@@ -48,13 +47,15 @@ if (Profile.signedInUser) {
 }
 
 $("#coverImage").change(function (event) {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-    reader.onload = function () {
-        $(".cover-image").attr("src", reader.result);
-    }
+    if (event.target.files.length > 0) {
+        const file = event.target.files[0];
+        const reader = new FileReader();
+        reader.onload = function () {
+            $(".cover-image").attr("src", reader.result);
+        }
 
-    reader.readAsDataURL(file);
+        reader.readAsDataURL(file);
+    }
 });
 
 $(".submit").click(function () {
@@ -64,7 +65,7 @@ $(".submit").click(function () {
 $("#createForm").submit(function (event) {
     // Prepare the form data
     event.preventDefault();
-    console.log("goingggg")
+
     const formData = new FormData(this);
 
     // Perform the POST request
@@ -74,9 +75,9 @@ $("#createForm").submit(function (event) {
     })
         .then(response => response.json())
         .then(data => {
-            console.log("hereeeee")
+
             if (data.status) {
-                console.log("runnng");
+
                 $("#modelId").modal("hide");
                 $(".toast-text").text("Posted")
                 $(".toast-header").text("Succcess");
@@ -87,7 +88,7 @@ $("#createForm").submit(function (event) {
                     location.reload();
                 });
             } else {
-                console.log("runnng not")
+
                 $("#modelId").modal("hide");
                 $('.toast').toast({ delay: 2000 })
                 $(".toast-header").text("Failed");
@@ -103,7 +104,6 @@ $("#createForm").submit(function (event) {
 });
 
 const tags = await postController.fetchTags();
-console.log(tags);
 tags.forEach((tag) => {
     let tagLabel = $("<label></label>")
     let tagCheck = $(`<input type='checkbox' name='tags' value='${tag.name}'></label>`);
@@ -120,6 +120,4 @@ $('input[name="tags"]').change(function () {
             box.setAttribute('disabled', true);
         })
     }
-
-    console.log('Selected values:', $('input[name="tags"]:not(:checked)').length);
 });

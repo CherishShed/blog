@@ -14,11 +14,9 @@ reviews.forEach((review) => {
     $(comment).addClass("comment");
     let author = $("<h5></h5>").text(review.person)
     $(author).addClass("author");
-
     $(carouselCaption).append(comment, author);
     $(carouselItem).append(carouselImage, carouselCaption);
     $(".carousel-inner").append(carouselItem);
-    console.log("done");
 });
 
 // Activate Carousel
