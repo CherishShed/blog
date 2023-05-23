@@ -36,6 +36,9 @@ postController.fetchPostById("api" + postUrl)
         console.log(openPostContent);
         $("#applause").data("postid", openPost._id);
         $("#applause-count").text(openPost.applause);
+        if (post.signedInUser.applaudedPosts.indexOf(openPost._id) != -1) {
+            $("#applause").addClass("done-action");
+        }
         $(".post-hero-image img").attr("src", "data:image/png;base64," + openPost.coverImage);
         $("#open-post-title").text(openPost.title);
         $("#open-post-description").text(openPost.description);

@@ -15,7 +15,7 @@ const postController = {
         var signedInUser = false
 
         Post.find({})
-            .populate('author', 'firstName lastName profileUrl')
+            .populate('author', 'firstName lastName profileUrl').sort({ applause: 'desc' })
             .then((data) => {
                 if (req.isAuthenticated()) {
                     inSession = true

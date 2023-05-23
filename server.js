@@ -1,38 +1,14 @@
 require("dotenv").config();
 const app = require('./Middleware/expressMiddleware');
-const passport = require('./Middleware/authMiddleware');
 const multer = require("multer");
-const database = require("./Models/database.model");
 const upload = multer({ dest: "uploads/" });
 const userController = require("./Controllers/user.Controller");
 const postController = require("./Controllers/post.Controller");
 const authController = require("./Controllers/auth.Controller");
-const User = database.User;
-const Post = database.Post;
-const Review = database.Review;
-
 app.get("/", (req, res) => {
-    // populateDb();
-    if (req.isAuthenticated()) {
-        // console.log(req.user)
-        const inSession = true
-        User.findById(req.user.id).populate("posts")
-            .then((user) => {
-                Post.find({})
-                    .then((post) => {
-                        res.render("index", { user, post, inSession })
-                    }
-                    );
-            })
-    } else {
-        Post.find({})
-            .then((post) => {
-                res.render("index", { post })
-            }
-            );
-    }
-})
+    res.render("index")
 
+})
 //Authentication APIs
 app.get('/auth/google', authController.googleAuth);
 app.get('/auth/google/blog', authController.googleAuthRedirect);

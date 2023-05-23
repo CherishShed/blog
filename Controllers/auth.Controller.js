@@ -1,6 +1,6 @@
 require("dotenv").config();
-const passport = require('./Middleware/authMiddleware');
-const database = require("./Models/database.model");
+const passport = require('../Middleware/authMiddleware');
+const database = require("../Models/database.model");
 const Review = database.Review;
 const User = database.User;
 
