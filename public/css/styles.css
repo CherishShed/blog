@@ -342,6 +342,14 @@ overflow-y: hidden;
         font-size: 20px;
 }
 
+.blog-title-container{
+min-height: 68px;
+}
+
+.blog-description-container{
+    min-height: 67px;
+    max-height: 69px;
+}
 .blog-title:hover {
     color:#0A4D68;
     text-decoration: none;

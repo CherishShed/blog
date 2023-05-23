@@ -133,9 +133,12 @@ async function recentPosts() {
 
         let blogText = $("<div></div>");
         $(blogText).addClass("blog-text");
+        let blogTitleContainer = $("<div></div>");
+        $(blogTitleContainer).addClass("blog-title-container");
         let blogTitle = $("<a></a>").text(post.title);
         $(blogTitle).addClass("blog-title");
         $(blogTitle).attr("href", post.url);
+        $(blogTitleContainer).append(blogTitle);
         let blogDescriptionContainer = $("<div></div>");
         $(blogDescriptionContainer).addClass("blog-description-container");
         let blogDescription = $("<p></p>").text(post.description);
@@ -148,13 +151,15 @@ async function recentPosts() {
             $(tagDets).addClass("tag btn btn-outline-dark")
             $(blogTags).append(tagDets);
         })
-        $(blogText).append(blogTitle, blogDescriptionContainer, blogTags);
+        $(blogText).append(blogTitleContainer, blogDescriptionContainer, blogTags);
         $(blogDetails).append(blogImage, blogText);
 
         $(".other-posts").append(blogDetails);
 
 
         const longText = $(blogDescription);
+        const otherlongText = $(blogTitle);
+
         const maxHeight = 70; // Adjust this value to match the desired height
 
 
@@ -162,6 +167,9 @@ async function recentPosts() {
 
             while (longText.outerHeight() > maxHeight) {
                 longText.text(longText.text().replace(/\W*\s(\S)*$/, '...'));
+            }
+            while (otherlongText.outerHeight() > maxHeight) {
+                otherlongText.text(otherlongText.text().replace(/\W*\s(\S)*$/, '...'));
             }
         }
 
