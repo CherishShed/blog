@@ -25,7 +25,10 @@ passport.use(new GoogleStrategy({
     function (accessToken, refreshToken, profile, cb) {
         // console.log(profile)
 
-        User.findOrCreate({ googleId: profile.id, username: profile.emails[0].value, googleProfilePic: profile._json.picture, firstName: profile.name.givenName, lastName: profile.name.familyName }, function (err, user) {
+        User.findOrCreate({ username: profile.emails[0].value, googleProfilePic: profile._json.picture, firstName: profile.name.givenName, lastName: profile.name.familyName }, function (err, user) {
+            user.googleId = profile.id;
+            user.profileUrl = `profile/${user._id}`;
+            user.save();
             return cb(err, user);
 
         });

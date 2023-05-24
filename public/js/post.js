@@ -25,6 +25,9 @@ postController.fetchPostById("api" + postUrl)
 
             // Store the user details in sessionStorage
             sessionStorage.setItem("user", JSON.stringify(post.signedInUser));
+            if (post.signedInUser.applaudedPosts.indexOf(post.data._id) != -1) {
+                $("#applause").addClass("done-action");
+            }
 
         }
         console.log("we are here");
@@ -32,9 +35,7 @@ postController.fetchPostById("api" + postUrl)
         let openPostContent = post.formattedHTML;
         $("#applause").data("postid", openPost._id);
         $("#applause-count").text(openPost.applause);
-        if (post.signedInUser.applaudedPosts.indexOf(openPost._id) != -1) {
-            $("#applause").addClass("done-action");
-        }
+
         $(".post-hero-image img").attr("src", "data:image/png;base64," + openPost.coverImage);
         $("#open-post-title").text(openPost.title);
         $("#open-post-description").text(openPost.description);

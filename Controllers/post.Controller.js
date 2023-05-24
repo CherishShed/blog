@@ -59,7 +59,7 @@ const postController = {
 
     getRecentPosts: async (req, res) => {
         let posts = await Post.find({}).populate("author", "firstName lastName profileUrl").sort({ createdAt: 'desc' });
-        const shownRecentPosts = posts.slice(0, 7);
+        const shownRecentPosts = posts.slice(0, 8);
         res.json(shownRecentPosts);
 
     },
@@ -81,9 +81,11 @@ const postController = {
         res.json({ inSession, signedInUser })
     },
     createPost: async (req, res) => {
+        console.log("creating...")
         if (req.isAuthenticated()) {
             const user = await User.findById(req.user._id);
-            var htmlContent = req.body.content;
+            var htmlContent = req.body.content
+            console.log(htmlContent);
             const $ = cheerio.load(htmlContent);
             const purifiedText = cleanseHTML(htmlContent);
             const formatting = extractFormattingMetadata($);

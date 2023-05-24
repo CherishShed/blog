@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 const findOrCreate = require("mongoose-findorcreate");
 
-mongoose.connect("mongodb+srv://cshed2000:23022004Cherish!@blogdb.8ibopve.mongodb.net/?retryWrites=true&w=majority");
+mongoose.connect("mongodb://127.0.0.1:27017/blogDB");
 const userSchema = new mongoose.Schema({
     username: String,
     password: String,
@@ -18,7 +18,7 @@ const userSchema = new mongoose.Schema({
     profilePic: { type: String, default: "" },
     profileUrl: String,
     socials: { linkedin: String, facebook: String, twitter: String, instagram: String },
-    about: String,
+    about: { type: String, default: "I use SóróSoke😊" },
     applaudedPosts: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "blogPost"

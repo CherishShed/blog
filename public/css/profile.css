@@ -211,7 +211,10 @@ h5 {
     max-height: 100%;
     min-height: 250px;
     width: 100%;
-    background-image: var(--grad);
+    background-image: url("../Images/pexels-jessica-lewis-creative-606541.jpg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center center;
     justify-content: center;
     /* overflow: hidden; */
 
@@ -292,6 +295,14 @@ h5 {
     max-height: 600px;
     overflow-y: scroll;
 
+}
+
+.user-posts::-webkit-scrollbar{
+    background-color: #F6FFDE;
+    width: 8px;
+}
+.user-posts::-webkit-scrollbar-thumb{
+        background-color:var(--text);
 }
 .no-value{
     text-align: center;

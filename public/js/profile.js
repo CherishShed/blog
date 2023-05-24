@@ -31,7 +31,13 @@ function profileData(profile) {
         $(".edit").css("display", "block");
     }
     document.title = `${profile.firstName} ${profile.lastName}`;
-    $("#profile-owner-pic").attr('src', "data:image/png;base64," + profile.profilePic);
+    if (profile.profilePic != "") {
+        var profilePicture = profile.profilePic;
+        $("#profile-owner-pic").attr('src', "data:image/png;base64," + profilePicture)
+    } else if (profile.googleProfilePic != "") {
+        var profilePicture = profile.googleProfilePic;
+        $("#profile-owner-pic").attr('src', profilePicture)
+    }
     $("#profile-owner-name").text(profile.name);
     $("#about").text(profile.about);
     for (var i in profile.socials) {
@@ -140,10 +146,13 @@ function fillPresentDetails(data) {
             }
         }
     }
-
-    $(".profile-image").attr("src", "data:image/png;base64," + data.profilePic)
-    // $("#picfileInput").val(data.profilePic);
-
+    if (data.profilePic != "") {
+        var profilePicture = data.profilePic;
+        $(".profile-image").attr('src', "data:image/png;base64," + profilePicture)
+    } else if (data.googleProfilePic != "") {
+        var profilePicture = data.googleProfilePic;
+        $(".profile-image").attr('src', profilePicture)
+    }
 
 }
 
