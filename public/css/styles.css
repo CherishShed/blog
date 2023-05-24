@@ -298,6 +298,10 @@ overflow-y: hidden;
 .other-posts-section{
     padding: 60px;
 }
+.other-posts-section h3{
+    position: relative;
+    left: 5%;
+}
 .other-posts{
     display: flex;
     flex-direction: row;
@@ -306,7 +310,7 @@ overflow-y: hidden;
     height: 100%;
     width: 100%;
     gap: 30px;
-    /* justify-content: space-around; */
+    justify-content: center;
 }
 
 .other-posts .blog-details {

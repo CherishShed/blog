@@ -95,12 +95,20 @@ async function setMainHighlight() {
 
                 $(".other-highlights").append(blogDetails);
                 const longText = $(blogDescription);
-                const maxHeight = 65;
+                const otherlongText = $(blogTitle);
+
+                const maxHeight = 60;
+
                 if (longText.outerHeight() > maxHeight) {
+
                     while (longText.outerHeight() > maxHeight) {
                         longText.text(longText.text().replace(/\W*\s(\S)*$/, '...'));
                     }
+                    while (otherlongText.outerHeight() > maxHeight) {
+                        otherlongText.text(otherlongText.text().replace(/\W*\s(\S)*$/, '...'));
+                    }
                 }
+
             })
 
 
