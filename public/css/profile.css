@@ -213,7 +213,7 @@ h5 {
     width: 100%;
     background-image: url("../Images/pexels-jessica-lewis-creative-606541.jpg");
     background-repeat: no-repeat;
-    background-size: contain;
+    background-size: cover;
     background-position: center center;
     justify-content: center;
     /* overflow: hidden; */
