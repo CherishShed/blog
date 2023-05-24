@@ -10,7 +10,7 @@ const authController = {
         passport.authenticate('google', { scope: ['profile', 'email'] })(req, res, next);
     },
     googleAuthRedirect: passport.authenticate('google', {
-        successRedirect: '/',
+        successRedirect: '/profiledetails',
         failureRedirect: '/login'
     }),
     displayLogin: async (req, res) => {

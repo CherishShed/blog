@@ -12,10 +12,10 @@ if (Profile.inSession) {
 }
 if (Profile.signedInUser) {
 
-    if (Profile.signedInUser.profilePic != null) {
+    if (Profile.signedInUser.profilePic != "") {
         var profilePicture = Profile.signedInUser.profilePic;
         $("#profile-pic").attr('src', "data:image/png;base64," + profilePicture)
-    } else if (Profile.signedInUser.googleProfilePic != null) {
+    } else if (Profile.signedInUser.googleProfilePic != "") {
         var profilePicture = Profile.signedInUser.googleProfilePic;
         $("#profile-pic").attr('src', profilePicture)
     }

@@ -13,10 +13,10 @@ postController.fetchPostById("api" + postUrl)
         }
         if (post.signedInUser) {
             console.log(post.signedInUser.username)
-            if (post.signedInUser.profilePic != null) {
+            if (post.signedInUser.profilePic != "") {
                 var profilePicture = post.signedInUser.profilePic;
                 $("#profile-pic").attr('src', "data:image/png;base64," + profilePicture)
-            } else if (post.signedInUser.googleProfilePic != null) {
+            } else if (post.signedInUser.googleProfilePic != "") {
                 var profilePicture = post.signedInUser.googleProfilePic;
                 $("#profile-pic").attr('src', profilePicture)
             }
@@ -48,10 +48,10 @@ postController.fetchPostById("api" + postUrl)
         } else {
             var authorOtherPosts = post.author.posts
         }
-        if (post.author.profilePic != null) {
+        if (post.author.profilePic != "") {
             var profilePicture = post.author.profilePic;
             $("#author-pic").attr('src', "data:image/png;base64," + profilePicture)
-        } else if (post.author.googleProfilePic != null) {
+        } else if (post.author.googleProfilePic != "") {
             var profilePicture = post.author.googleProfilePic;
             $("#author-pic").attr('src', profilePicture)
         }

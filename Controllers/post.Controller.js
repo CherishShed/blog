@@ -81,11 +81,9 @@ const postController = {
         res.json({ inSession, signedInUser })
     },
     createPost: async (req, res) => {
-        console.log("creating...")
         if (req.isAuthenticated()) {
             const user = await User.findById(req.user._id);
-            var htmlContent = req.body.content
-            console.log(htmlContent);
+            var htmlContent = req.body.content;
             const $ = cheerio.load(htmlContent);
             const purifiedText = cleanseHTML(htmlContent);
             const formatting = extractFormattingMetadata($);
@@ -106,6 +104,13 @@ const postController = {
 
             if (req.file) {
                 newPost.coverImage = fs.readFileSync(req.file.path, 'base64');
+                if (req.file) {
+                    if (fs.existsSync(req.file.path)) {
+                        fs.unlink(req.file.path, (err) => {
+                            if (err) throw err;
+                        });
+                    }
+                }
             } else {
                 newPost.coverImage = fs.readFileSync("./public/Images/pexels-jessica-lewis-creative-606541.jpg", 'base64');
             }

@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const passportLocalMongoose = require('passport-local-mongoose');
 const findOrCreate = require("mongoose-findorcreate");
 
-mongoose.connect("mongodb://127.0.0.1:27017/blogDB");
+mongoose.connect("mongodb+srv://cshed2000:23022004Cherish!@blogdb.8ibopve.mongodb.net/?retryWrites=true&w=majority");
 const userSchema = new mongoose.Schema({
     username: String,
     password: String,

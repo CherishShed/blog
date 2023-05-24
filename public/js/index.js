@@ -22,11 +22,11 @@ async function setMainHighlight() {
             }
             if (result.signedInUser) {
 
-                if (result.signedInUser.profilePic != null) {
+                if (result.signedInUser.profilePic != "") {
                     var profilePicture = result.signedInUser.profilePic;
                     $("#profile-pic").attr('src', "data:image/png;base64," + profilePicture)
                 }
-                else if (result.signedInUser.googleProfilePic != null) {
+                else if (result.signedInUser.googleProfilePic != "") {
                     console.log("Google profile")
                     var profilePicture = result.signedInUser.googleProfilePic;
                     $("#profile-pic").attr('src', profilePicture)

@@ -29,7 +29,7 @@
     <%- include('partials/nav.ejs') %>
         <form action="/createpost" method="POST" id="createForm">
             <input id="x" type="hidden" name="content">
-            <input type="text" name="title" id="postTitle" placeholder="TITLE" required class="block-display">
+
             <div class="coverPic-container">
                 <h3>Cover Image</h3>
                 <div class="coverPic">
@@ -45,6 +45,7 @@
                         <i class="fa-solid fa-file-arrow-up"></i></span>
                 </div>
             </div>
+            <input type="text" name="title" id="postTitle" placeholder="TITLE" required class="block-display">
             <textarea name="description" id="postDescription" placeholder="Description...(NO TOO MUCH TALK ABEG)"
                 required></textarea>
             <div class="editor">
