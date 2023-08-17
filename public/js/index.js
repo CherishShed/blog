@@ -188,6 +188,6 @@ window.onload = async function () {
     await setMainHighlight();
     await recentPosts();
     setTimeout(function () {
-        $(".preloader").fadeOut(300);
+        $(".preloader").css("display", "none");
     }, 1000)
 };
